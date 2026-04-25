@@ -2,61 +2,32 @@ import React, { useState, useEffect, useRef } from 'react';
 import { authService, userService, chatService } from './services/api';
 import Admin from './Admin';
 
-// ===== PALETA DE CORES MODERNA =====
-const C = {
-  primary: '#6366f1',
-  primaryDark: '#4f46e5',
-  primaryLight: '#818cf8',
-  secondary: '#06b6d4',
-  accent: '#8b5cf6',
-  bg: '#f8fafc',
-  surface: '#ffffff',
-  surfaceAlt: '#f1f5f9',
-  text: '#0f172a',
-  textSecondary: '#475569',
-  textMuted: '#94a3b8',
-  textInverse: '#ffffff',
-  border: '#e2e8f0',
-  success: '#10b981',
-  danger: '#ef4444',
-  warning: '#f59e0b',
-  online: '#10b981',
-  offline: '#cbd5e1',
-  shadow: '0 1px 3px rgba(0,0,0,0.08)',
-  shadowMd: '0 4px 6px rgba(0,0,0,0.1)',
-  shadowLg: '0 10px 15px rgba(0,0,0,0.1)',
-  shadowXl: '0 20px 25px rgba(0,0,0,0.15)',
-  radius: '12px',
-  radiusSm: '8px',
-  radiusLg: '16px',
-  radiusFull: '50px',
-};
-
 // ===== ÍCONES SVG =====
 const Icons = {
-  Menu: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>,
-  Close: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
-  Search: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
-  PersonAdd: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>,
-  Chat: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>,
-  Send: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>,
-  Logout: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>,
-  Check: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
-  CloseCircle: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>,
-  ChevronLeft: () => <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>,
-  MoreVert: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>,
-  Lock: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>,
-  Users: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
+  Menu: () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>,
+  Close: () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
+  PersonAdd: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>,
+  Chat: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>,
+  Send: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>,
+  Logout: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>,
+  Check: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>,
+  CloseCircle: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>,
+  ChevronLeft: () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>,
+  Lock: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>,
+  Users: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
+  Bell: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>,
+  BellOff: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M13.73 21a2 2 0 0 1-3.46 0"/><path d="M18.63 13A17.89 17.89 0 0 1 18 8"/><line x1="1" y1="1" x2="23" y2="23"/></svg>,
+  Bot: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="14" rx="3"/><circle cx="12" cy="10" r="2"/><circle cx="8" cy="18" r="1.5"/><circle cx="16" cy="18" r="1.5"/><line x1="8" y1="21" x2="16" y2="21"/></svg>,
+  Trash: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>,
 };
 
-// ===== COMPONENTE PRINCIPAL =====
 function App() {
   const [auth, setAuth] = useState(false);
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [authTab, setAuthTab] = useState('login');
+  const [authPage, setAuthPage] = useState('login');
   const [login, setLogin] = useState({ username: '', password: '' });
   const [reg, setReg] = useState({ username: '', password: '', telefone: '' });
   const [loading, setLoading] = useState(false);
@@ -70,575 +41,278 @@ function App() {
   const [searchPhone, setSearchPhone] = useState('');
   const [searchResult, setSearchResult] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  
+  // Chat IA
+  const [aiChat, setAiChat] = useState(false);
+  const [aiMessages, setAiMessages] = useState([]);
+  const [aiLoading, setAiLoading] = useState(false);
+  
+  // Mídia
+  const fileInputRef = useRef(null);
+  const cameraInputRef = useRef(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [mediaRecorder, setMediaRecorder] = useState(null);
+  const [recordingType, setRecordingType] = useState(null);
+  
   const msgEnd = useRef(null);
-  const pollingRef = useRef(null);
 
-  // ===== DETECTAR MOBILE =====
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-      if (window.innerWidth >= 768) {
-        setSidebarOpen(false);
-      }
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    const h = () => { setIsMobile(window.innerWidth < 768); if (window.innerWidth >= 768) setSidebarOpen(false); };
+    window.addEventListener('resize', h); return () => window.removeEventListener('resize', h);
   }, []);
 
-  // ===== FECHAR SIDEBAR AO SELECIONAR AMIGO NO MOBILE =====
-  const handleSelectFriend = (friend) => {
-    setSelFriend(friend);
-    if (isMobile) {
-      setSidebarOpen(false);
-    }
+  const selectFriend = (f) => {
+    if (f.id === 'ai') { setAiChat(true); setSelFriend(null); }
+    else { setSelFriend(f); setAiChat(false); }
+    if (isMobile) setSidebarOpen(false);
   };
 
-  // ===== INICIALIZAÇÃO =====
   useEffect(() => {
     const t = localStorage.getItem('token'), u = localStorage.getItem('user');
-    if (t && u) {
-      try {
-        const d = JSON.parse(u);
-        setUser(d);
-        setAuth(true);
-        if (d.username === 'admin') {
-          setIsAdmin(true);
-        } else {
-          setIsAdmin(false);
-          loadFriends();
-          loadRequests();
-        }
-      } catch (e) {
-        localStorage.clear();
-      }
-    }
+    if (t && u) { try { const d = JSON.parse(u); setUser(d); setAuth(true); setIsAdmin(d.username === 'admin'); } catch (e) { localStorage.clear(); } }
   }, []);
 
-  // ===== NOTIFICAÇÕES =====
   useEffect(() => {
-    if (auth && !isAdmin && 'Notification' in window) {
-      if (Notification.permission === 'granted') {
-        setNotificationsEnabled(true);
-      }
-    }
+    if (auth && !isAdmin && 'Notification' in window && Notification.permission === 'granted') setNotificationsEnabled(true);
   }, [auth, isAdmin]);
 
   const enableNotifications = async () => {
-    if (!('Notification' in window)) {
-      alert('Seu navegador não suporta notificações.');
-      return;
-    }
-    try {
-      const permission = await Notification.requestPermission();
-      if (permission === 'granted') {
-        setNotificationsEnabled(true);
-        new Notification('🔔 CipherChat', {
-          body: 'Notificações ativadas com sucesso!',
-        });
-      } else {
-        alert('❌ Permissão negada. Ative nas configurações do navegador.');
-      }
-    } catch (e) {
-      console.error('Erro:', e);
-    }
+    if (!('Notification' in window)) return;
+    const p = await Notification.requestPermission();
+    if (p === 'granted') { setNotificationsEnabled(true); new Notification('Haremessenger', { body: 'Notificações ativadas!' }); }
   };
+  const disableNotifications = () => setNotificationsEnabled(false);
 
-  const disableNotifications = async () => {
-    setNotificationsEnabled(false);
-    alert('🔕 Notificações desativadas.');
-  };
-
-  // ===== POLLING DE MENSAGENS =====
+  // Polling
   useEffect(() => {
-    if (selFriend?.conversa_id) {
-      loadMsgs();
-      pollingRef.current = setInterval(loadMsgs, 2000);
-    }
-    return () => {
-      if (pollingRef.current) {
-        clearInterval(pollingRef.current);
-        pollingRef.current = null;
-      }
+    if (!selFriend?.conversa_id || aiChat) return;
+    let a = true;
+    const p = async () => { if (!a) return; try { const r = await chatService.getMessages(selFriend.conversa_id); if (a) setMsgs(r.data.mensagens || []); } catch (e) {} };
+    p(); const i = setInterval(p, 1000);
+    return () => { a = false; clearInterval(i); };
+  }, [selFriend?.conversa_id, aiChat]);
+
+  useEffect(() => {
+    if (!auth || isAdmin) return;
+    let a = true;
+    const p = async () => {
+      if (!a) return;
+      try { const [fr, rq] = await Promise.all([userService.getFriends(), userService.getFriendRequests()]); if (a) { setFriends(fr.data.amigos || []); setRequests(rq.data.recebidas || []); } } catch (e) {}
     };
-  }, [selFriend?.conversa_id]);
-
-  // ===== POLLING DE AMIGOS =====
-  useEffect(() => {
-    if (auth && !isAdmin) {
-      const friendPolling = setInterval(() => {
-        loadFriends();
-        loadRequests();
-      }, 5000);
-      return () => clearInterval(friendPolling);
-    }
+    p(); const i = setInterval(p, 2000);
+    return () => { a = false; clearInterval(i); };
   }, [auth, isAdmin]);
 
-  // ===== SCROLL AUTOMÁTICO =====
-  useEffect(() => {
-    msgEnd.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [msgs]);
-
-  // ===== API CALLS =====
-  const loadFriends = async () => {
-    try {
-      const r = await userService.getFriends();
-      setFriends(r.data.amigos || []);
-    } catch (e) {
-      console.error('Erro ao carregar amigos:', e);
-    }
-  };
-
-  const loadRequests = async () => {
-    try {
-      const r = await userService.getFriendRequests();
-      setRequests(r.data.recebidas || []);
-    } catch (e) {
-      console.error('Erro ao carregar solicitações:', e);
-    }
-  };
+  useEffect(() => { msgEnd.current?.scrollIntoView({ behavior: 'smooth' }); }, [msgs, aiMessages]);
 
   const loadMsgs = async () => {
     if (!selFriend?.conversa_id) return;
-    try {
-      const r = await chatService.getMessages(selFriend.conversa_id);
-      const mensagens = r.data.mensagens || [];
-      setMsgs(mensagens);
-    } catch (err) {
-      console.error('Erro ao carregar mensagens:', err);
-    }
+    try { const r = await chatService.getMessages(selFriend.conversa_id); setMsgs(r.data.mensagens || []); } catch (e) {}
   };
 
   const doLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+    e.preventDefault(); setLoading(true);
     try {
-      const r = await authService.login(login);
-      const userData = r.data.usuario;
-      setUser(userData);
-      setAuth(true);
-      localStorage.setItem('token', r.data.token);
-      localStorage.setItem('user', JSON.stringify(userData));
-      if (userData.username === 'admin') {
-        setIsAdmin(true);
-      } else {
-        setIsAdmin(false);
-        loadFriends();
-        loadRequests();
-      }
-      setLogin({ username: '', password: '' });
-    } catch (err) {
-      alert('Login falhou. Verifique suas credenciais.');
-    } finally {
-      setLoading(false);
-    }
+      const r = await authService.login(login); const d = r.data.usuario;
+      setUser(d); setAuth(true); localStorage.setItem('token', r.data.token); localStorage.setItem('user', JSON.stringify(d));
+      setIsAdmin(d.username === 'admin'); setLogin({ username: '', password: '' });
+    } catch (err) { alert('Login falhou.'); } finally { setLoading(false); }
   };
 
   const doRegister = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+    e.preventDefault(); setLoading(true);
     try {
-      const r = await authService.register({
-        username: reg.username,
-        password: reg.password,
-        numero_celular: reg.telefone,
-      });
-      const userData = r.data.usuario;
-      setUser(userData);
-      setAuth(true);
-      localStorage.setItem('token', r.data.token);
-      localStorage.setItem('user', JSON.stringify(userData));
-      if (userData.username === 'admin') {
-        setIsAdmin(true);
-      } else {
-        setIsAdmin(false);
-        loadFriends();
-        loadRequests();
-      }
-      setReg({ username: '', password: '', telefone: '' });
-    } catch (err) {
-      alert('Registro falhou. Tente novamente.');
-    } finally {
-      setLoading(false);
-    }
+      const r = await authService.register({ username: reg.username, password: reg.password, numero_celular: reg.telefone });
+      const d = r.data.usuario; setUser(d); setAuth(true);
+      localStorage.setItem('token', r.data.token); localStorage.setItem('user', JSON.stringify(d));
+      setIsAdmin(d.username === 'admin'); setReg({ username: '', password: '', telefone: '' });
+    } catch (err) { alert('Registro falhou.'); } finally { setLoading(false); }
   };
 
   const doLogout = () => {
-    localStorage.clear();
-    setAuth(false);
-    setUser(null);
-    setIsAdmin(false);
-    setNotificationsEnabled(false);
-    setFriends([]);
-    setSelFriend(null);
-    setMsgs([]);
-    if (pollingRef.current) clearInterval(pollingRef.current);
+    localStorage.clear(); setAuth(false); setUser(null); setIsAdmin(false);
+    setNotificationsEnabled(false); setFriends([]); setSelFriend(null); setMsgs([]);
+    setAiMessages([]); setAiChat(false);
   };
 
   const sendMsg = async () => {
-    if (!newMsg.trim() || !selFriend?.conversa_id) return;
-
-    const conteudo = newMsg.trim();
+    const m = newMsg.trim(); if (!m || !selFriend?.conversa_id) return;
     setNewMsg('');
+    try { await chatService.sendMessage(selFriend.conversa_id, m); loadMsgs(); }
+    catch (err) { setNewMsg(m); }
+  };
 
+  // ===== UPLOAD DE ARQUIVO =====
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !selFriend?.conversa_id) return;
+    
+    const tempMsg = { id: Date.now(), remetente: user.username, conteudo: `📎 Enviando ${file.name}...`, enviada_em: new Date().toISOString(), temp: true };
+    setMsgs(prev => [...prev, tempMsg]);
+    
+    const formData = new FormData();
+    formData.append('arquivo', file);
+    
     try {
-      await chatService.sendMessage(selFriend.conversa_id, conteudo);
-      setTimeout(() => {
-        loadMsgs();
-      }, 300);
+      const token = localStorage.getItem('token');
+      const apiUrl = window.location.hostname === 'localhost' ? 'http://127.0.0.1:8000/api' : 'https://secure-messaging-api.onrender.com/api';
+      await fetch(`${apiUrl}/conversas/${selFriend.conversa_id}/upload/`, {
+        method: 'POST', headers: { 'Authorization': `Token ${token}` }, body: formData
+      });
+      setMsgs(prev => prev.filter(m => m.id !== tempMsg.id));
+      loadMsgs();
     } catch (err) {
-      console.error('Erro ao enviar mensagem:', err);
-      setNewMsg(conteudo);
-      alert('Erro ao enviar mensagem');
+      setMsgs(prev => prev.filter(m => m.id !== tempMsg.id));
+      alert('Erro ao enviar arquivo');
+    }
+    e.target.value = '';
+  };
+
+  // ===== GRAVAÇÃO DE ÁUDIO =====
+  const startAudioRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      const chunks = [];
+      recorder.ondataavailable = (e) => chunks.push(e.data);
+      recorder.onstop = async () => {
+        const blob = new Blob(chunks, { type: 'audio/wav' });
+        await uploadRecording(blob, 'audio');
+        stream.getTracks().forEach(t => t.stop());
+      };
+      recorder.start();
+      setMediaRecorder(recorder);
+      setIsRecording(true);
+      setRecordingType('audio');
+    } catch (err) { alert('Microfone não disponível'); }
+  };
+
+  // ===== GRAVAÇÃO DE VÍDEO =====
+  const startVideoRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      const recorder = new MediaRecorder(stream);
+      const chunks = [];
+      recorder.ondataavailable = (e) => chunks.push(e.data);
+      recorder.onstop = async () => {
+        const blob = new Blob(chunks, { type: 'video/webm' });
+        await uploadRecording(blob, 'video');
+        stream.getTracks().forEach(t => t.stop());
+      };
+      recorder.start();
+      setMediaRecorder(recorder);
+      setIsRecording(true);
+      setRecordingType('video');
+    } catch (err) { alert('Câmera não disponível'); }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorder && isRecording) {
+      mediaRecorder.stop();
+      setIsRecording(false);
+      setMediaRecorder(null);
+      setRecordingType(null);
     }
   };
 
-  const doSearch = async () => {
-    if (!searchPhone.trim()) return;
+  const uploadRecording = async (blob, tipo) => {
+    if (!selFriend?.conversa_id) return;
+    const formData = new FormData();
+    formData.append(tipo === 'audio' ? 'audio' : 'video', blob, `gravacao.${tipo === 'audio' ? 'wav' : 'webm'}`);
     try {
-      const r = await userService.searchByPhone(searchPhone);
-      setSearchResult(r.data);
+      const token = localStorage.getItem('token');
+      const apiUrl = window.location.hostname === 'localhost' ? 'http://127.0.0.1:8000/api' : 'https://secure-messaging-api.onrender.com/api';
+      await fetch(`${apiUrl}/conversas/${selFriend.conversa_id}/gravar/`, {
+        method: 'POST', headers: { 'Authorization': `Token ${token}` }, body: formData
+      });
+      loadMsgs();
+    } catch (err) { alert('Erro ao enviar gravação'); }
+  };
+
+  const downloadMidia = async (arquivoId) => {
+    const token = localStorage.getItem('token');
+    const apiUrl = window.location.hostname === 'localhost' ? 'http://127.0.0.1:8000/api' : 'https://secure-messaging-api.onrender.com/api';
+    window.open(`${apiUrl}/download/${arquivoId}/`, '_blank');
+  };
+
+  // ===== THUNDERBOLD_AI =====
+  const sendToAI = async () => {
+    if (!newMsg.trim() || aiLoading) return;
+    const msg = { role: 'user', content: newMsg.trim(), id: Date.now() };
+    setAiMessages(p => [...p, msg]);
+    setNewMsg('');
+    setAiLoading(true);
+    try {
+      const token = localStorage.getItem('token');
+      const apiUrl = window.location.hostname === 'localhost' ? 'http://127.0.0.1:8000/api' : 'https://secure-messaging-api.onrender.com/api';
+      const r = await fetch(`${apiUrl}/ai/chat/`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Token ${token}` },
+        body: JSON.stringify({ mensagem: msg.content })
+      });
+      const d = await r.json();
+      setAiMessages(p => [...p, { role: 'assistant', content: d.reply || d.erro || 'Erro', id: Date.now() + 1 }]);
     } catch (err) {
-      console.error('Erro na busca:', err);
-    }
+      setAiMessages(p => [...p, { role: 'assistant', content: 'Erro de conexão', id: Date.now() + 1 }]);
+    } finally { setAiLoading(false); }
   };
 
-  const sendReq = async () => {
-    if (!searchResult?.usuario) return;
+  const clearAiHistory = async () => {
     try {
-      await userService.sendFriendRequest(searchResult.usuario.telefone);
-      alert('Solicitação enviada!');
-      setShowSearch(false);
-      setSearchPhone('');
-      setSearchResult(null);
-    } catch (e) {
-      alert(e.response?.data?.erro || 'Erro ao enviar solicitação');
-    }
+      const token = localStorage.getItem('token');
+      const apiUrl = window.location.hostname === 'localhost' ? 'http://127.0.0.1:8000/api' : 'https://secure-messaging-api.onrender.com/api';
+      await fetch(`${apiUrl}/ai/clear/`, { method: 'POST', headers: { 'Authorization': `Token ${token}` } });
+    } catch (e) {}
+    setAiMessages([{ role: 'assistant', content: 'Histórico limpo!', id: Date.now() }]);
   };
 
-  const acceptReq = async (id) => {
-    try {
-      await userService.respondToRequest(id, 'ACEITAR');
-      loadFriends();
-      loadRequests();
-    } catch (e) {
-      console.error('Erro ao aceitar:', e);
-    }
-  };
-
-  const rejectReq = async (id) => {
-    try {
-      await userService.respondToRequest(id, 'RECUSAR');
-      loadRequests();
-    } catch (e) {
-      console.error('Erro ao recusar:', e);
-    }
-  };
+  const doSearch = async () => { if (!searchPhone.trim()) return; try { const r = await userService.searchByPhone(searchPhone); setSearchResult(r.data); } catch (e) {} };
+  const sendReq = async () => { try { await userService.sendFriendRequest(searchResult.usuario.telefone); alert('Solicitação enviada!'); setShowSearch(false); setSearchPhone(''); setSearchResult(null); } catch (e) { alert(e.response?.data?.erro || 'Erro'); } };
+  const acceptReq = async (id) => { try { await userService.respondToRequest(id, 'ACEITAR'); const [fr, rq] = await Promise.all([userService.getFriends(), userService.getFriendRequests()]); setFriends(fr.data.amigos || []); setRequests(rq.data.recebidas || []); } catch (e) {} };
+  const rejectReq = async (id) => { try { await userService.respondToRequest(id, 'RECUSAR'); const r = await userService.getFriendRequests(); setRequests(r.data.recebidas || []); } catch (e) {} };
 
   const ini = (n) => (n ? n.substring(0, 2).toUpperCase() : '?');
-  const ft = (iso) =>
-    iso ? new Date(iso).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '';
+  const ft = (iso) => iso ? new Date(iso).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '';
 
-  // ===== REDIRECIONAR ADMIN =====
   if (auth && isAdmin) return <Admin />;
 
-  // ===== LOGIN PAGE =====
+  // ===== CSS =====
+  const css = `
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f0f2f5;overflow:hidden}
+    @keyframes fadeMsg{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes slideIn{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+    @keyframes recordingPulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.4)}50%{box-shadow:0 0 0 8px rgba(239,68,68,0)}}
+    ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:#ccc;border-radius:4px}
+  `;
+
+  // ===== LOGIN =====
   if (!auth) {
     return (
-      <div style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: `linear-gradient(135deg, ${C.bg} 0%, ${C.surfaceAlt} 100%)`,
-        padding: '16px',
-      }}>
-        <div style={{
-          width: '100%',
-          maxWidth: '440px',
-          background: C.surface,
-          borderRadius: C.radiusLg,
-          padding: '40px 32px',
-          boxShadow: C.shadowXl,
-        }}>
-          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-            <div style={{
-              width: '64px',
-              height: '64px',
-              margin: '0 auto 16px',
-              background: `linear-gradient(135deg, ${C.primary}, ${C.accent})`,
-              borderRadius: C.radius,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'white',
-            }}>
-              <Icons.Lock />
-            </div>
-            <h1 style={{
-              fontSize: '28px',
-              fontWeight: '800',
-              background: `linear-gradient(135deg, ${C.primary}, ${C.accent})`,
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              marginBottom: '8px',
-            }}>
-              Haremessenger
-            </h1>
-            <p style={{ color: C.textMuted, fontSize: '14px' }}>
-              Mensageiro Seguro com Criptografia
-            </p>
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f0f2f5', padding: 16 }}>
+        <style>{css}</style>
+        <div style={{ width: '100%', maxWidth: 400, background: '#fff', borderRadius: 16, padding: '32px 24px', boxShadow: '0 2px 16px rgba(0,0,0,0.08)' }}>
+          <div style={{ textAlign: 'center', marginBottom: 24 }}>
+            <div style={{ width: 48, height: 48, margin: '0 auto 12px', background: 'linear-gradient(135deg, #dc2626, #06b6d4)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}><Icons.Lock /></div>
+            <h1 style={{ fontSize: 22, fontWeight: 700, color: '#1a1a2e' }}>Haremessenger</h1>
+            <p style={{ color: '#666', fontSize: 13, marginTop: 4 }}>Mensageiro Seguro</p>
           </div>
-
-          <div style={{
-            display: 'flex',
-            background: C.surfaceAlt,
-            borderRadius: C.radiusSm,
-            padding: '4px',
-            marginBottom: '24px',
-          }}>
-            <button
-              onClick={() => setAuthTab('login')}
-              style={{
-                flex: 1,
-                padding: '12px',
-                border: 'none',
-                borderRadius: C.radiusSm,
-                cursor: 'pointer',
-                fontSize: '14px',
-                fontWeight: authTab === 'login' ? '600' : '400',
-                background: authTab === 'login' ? C.surface : 'transparent',
-                color: authTab === 'login' ? C.primary : C.textMuted,
-                boxShadow: authTab === 'login' ? C.shadow : 'none',
-                transition: 'all 0.2s',
-              }}
-            >
-              Entrar
-            </button>
-            <button
-              onClick={() => setAuthTab('register')}
-              style={{
-                flex: 1,
-                padding: '12px',
-                border: 'none',
-                borderRadius: C.radiusSm,
-                cursor: 'pointer',
-                fontSize: '14px',
-                fontWeight: authTab === 'register' ? '600' : '400',
-                background: authTab === 'register' ? C.surface : 'transparent',
-                color: authTab === 'register' ? C.primary : C.textMuted,
-                boxShadow: authTab === 'register' ? C.shadow : 'none',
-                transition: 'all 0.2s',
-              }}
-            >
-              Registrar
-            </button>
+          <div style={{ display: 'flex', background: '#f0f2f5', borderRadius: 8, padding: 3, marginBottom: 20 }}>
+            <button onClick={() => setAuthPage('login')} style={authPage === 'login' ? tabOn : tabOff}>Entrar</button>
+            <button onClick={() => setAuthPage('register')} style={authPage === 'register' ? tabOn : tabOff}>Criar Conta</button>
           </div>
-
-          {authTab === 'login' ? (
+          {authPage === 'login' ? (
             <form onSubmit={doLogin}>
-              <div style={{ marginBottom: '16px' }}>
-                <label style={{
-                  display: 'block',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  color: C.textSecondary,
-                  marginBottom: '8px',
-                }}>
-                  Username
-                </label>
-                <input
-                  type="text"
-                  placeholder="Seu username"
-                  value={login.username}
-                  onChange={e => setLogin({ ...login, username: e.target.value })}
-                  required
-                  style={{
-                    width: '100%',
-                    padding: '12px 16px',
-                    background: C.surfaceAlt,
-                    border: `2px solid ${C.border}`,
-                    borderRadius: C.radiusSm,
-                    fontSize: '14px',
-                    color: C.text,
-                    outline: 'none',
-                    transition: 'border-color 0.2s',
-                    boxSizing: 'border-box',
-                  }}
-                  onFocus={e => e.target.style.borderColor = C.primary}
-                  onBlur={e => e.target.style.borderColor = C.border}
-                />
-              </div>
-              <div style={{ marginBottom: '24px' }}>
-                <label style={{
-                  display: 'block',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  color: C.textSecondary,
-                  marginBottom: '8px',
-                }}>
-                  Senha
-                </label>
-                <input
-                  type="password"
-                  placeholder="••••••••"
-                  value={login.password}
-                  onChange={e => setLogin({ ...login, password: e.target.value })}
-                  required
-                  style={{
-                    width: '100%',
-                    padding: '12px 16px',
-                    background: C.surfaceAlt,
-                    border: `2px solid ${C.border}`,
-                    borderRadius: C.radiusSm,
-                    fontSize: '14px',
-                    color: C.text,
-                    outline: 'none',
-                    transition: 'border-color 0.2s',
-                    boxSizing: 'border-box',
-                  }}
-                  onFocus={e => e.target.style.borderColor = C.primary}
-                  onBlur={e => e.target.style.borderColor = C.border}
-                />
-              </div>
-              <button
-                type="submit"
-                disabled={loading}
-                style={{
-                  width: '100%',
-                  padding: '14px',
-                  background: `linear-gradient(135deg, ${C.primary}, ${C.accent})`,
-                  color: C.textInverse,
-                  border: 'none',
-                  borderRadius: C.radiusSm,
-                  fontSize: '15px',
-                  fontWeight: '600',
-                  cursor: loading ? 'not-allowed' : 'pointer',
-                  opacity: loading ? 0.7 : 1,
-                  boxShadow: C.shadowMd,
-                  transition: 'all 0.2s',
-                }}
-              >
-                {loading ? 'Entrando...' : '🔐 Entrar'}
-              </button>
+              <input type="text" placeholder="Username" value={login.username} onChange={e => setLogin({ ...login, username: e.target.value })} required style={inputCss} />
+              <input type="password" placeholder="Senha" value={login.password} onChange={e => setLogin({ ...login, password: e.target.value })} required style={{ ...inputCss, marginBottom: 20 }} />
+              <button type="submit" disabled={loading} style={btnCss(loading)}>{loading ? 'Entrando...' : 'Entrar'}</button>
             </form>
           ) : (
             <form onSubmit={doRegister}>
-              <div style={{ marginBottom: '16px' }}>
-                <label style={{
-                  display: 'block',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  color: C.textSecondary,
-                  marginBottom: '8px',
-                }}>
-                  Username
-                </label>
-                <input
-                  type="text"
-                  placeholder="Escolha um username"
-                  value={reg.username}
-                  onChange={e => setReg({ ...reg, username: e.target.value })}
-                  required
-                  style={{
-                    width: '100%',
-                    padding: '12px 16px',
-                    background: C.surfaceAlt,
-                    border: `2px solid ${C.border}`,
-                    borderRadius: C.radiusSm,
-                    fontSize: '14px',
-                    color: C.text,
-                    outline: 'none',
-                    transition: 'border-color 0.2s',
-                    boxSizing: 'border-box',
-                  }}
-                  onFocus={e => e.target.style.borderColor = C.primary}
-                  onBlur={e => e.target.style.borderColor = C.border}
-                />
-              </div>
-              <div style={{ marginBottom: '16px' }}>
-                <label style={{
-                  display: 'block',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  color: C.textSecondary,
-                  marginBottom: '8px',
-                }}>
-                  Telefone
-                </label>
-                <input
-                  type="tel"
-                  placeholder="+55 (00) 00000-0000"
-                  value={reg.telefone}
-                  onChange={e => setReg({ ...reg, telefone: e.target.value })}
-                  required
-                  style={{
-                    width: '100%',
-                    padding: '12px 16px',
-                    background: C.surfaceAlt,
-                    border: `2px solid ${C.border}`,
-                    borderRadius: C.radiusSm,
-                    fontSize: '14px',
-                    color: C.text,
-                    outline: 'none',
-                    transition: 'border-color 0.2s',
-                    boxSizing: 'border-box',
-                  }}
-                  onFocus={e => e.target.style.borderColor = C.primary}
-                  onBlur={e => e.target.style.borderColor = C.border}
-                />
-              </div>
-              <div style={{ marginBottom: '24px' }}>
-                <label style={{
-                  display: 'block',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  color: C.textSecondary,
-                  marginBottom: '8px',
-                }}>
-                  Senha
-                </label>
-                <input
-                  type="password"
-                  placeholder="Crie uma senha segura"
-                  value={reg.password}
-                  onChange={e => setReg({ ...reg, password: e.target.value })}
-                  required
-                  style={{
-                    width: '100%',
-                    padding: '12px 16px',
-                    background: C.surfaceAlt,
-                    border: `2px solid ${C.border}`,
-                    borderRadius: C.radiusSm,
-                    fontSize: '14px',
-                    color: C.text,
-                    outline: 'none',
-                    transition: 'border-color 0.2s',
-                    boxSizing: 'border-box',
-                  }}
-                  onFocus={e => e.target.style.borderColor = C.primary}
-                  onBlur={e => e.target.style.borderColor = C.border}
-                />
-              </div>
-              <button
-                type="submit"
-                disabled={loading}
-                style={{
-                  width: '100%',
-                  padding: '14px',
-                  background: `linear-gradient(135deg, ${C.primary}, ${C.accent})`,
-                  color: C.textInverse,
-                  border: 'none',
-                  borderRadius: C.radiusSm,
-                  fontSize: '15px',
-                  fontWeight: '600',
-                  cursor: loading ? 'not-allowed' : 'pointer',
-                  opacity: loading ? 0.7 : 1,
-                  boxShadow: C.shadowMd,
-                  transition: 'all 0.2s',
-                }}
-              >
-                {loading ? 'Registrando...' : '✨ Criar Conta'}
-              </button>
+              <input type="text" placeholder="Username" value={reg.username} onChange={e => setReg({ ...reg, username: e.target.value })} required style={inputCss} />
+              <input type="tel" placeholder="Telefone" value={reg.telefone} onChange={e => setReg({ ...reg, telefone: e.target.value })} required style={inputCss} />
+              <input type="password" placeholder="Senha" value={reg.password} onChange={e => setReg({ ...reg, password: e.target.value })} required style={{ ...inputCss, marginBottom: 20 }} />
+              <button type="submit" disabled={loading} style={btnCss(loading)}>{loading ? 'Criando...' : 'Criar Conta'}</button>
             </form>
           )}
         </div>
@@ -646,901 +320,267 @@ function App() {
     );
   }
 
-  // ===== SIDEBAR CONTENT =====
-  const sidebarContent = (
-    <div style={{
-      flex: 1,
-      display: 'flex',
-      flexDirection: 'column',
-      minHeight: 0,
-    }}>
-      {/* Search */}
-      <div style={{ padding: '16px' }}>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          padding: '10px 16px',
-          background: C.surfaceAlt,
-          borderRadius: C.radiusSm,
-          border: `2px solid ${C.border}`,
-        }}>
-          <Icons.Search />
-          <input
-            placeholder="Buscar conversas..."
-            style={{
-              flex: 1,
-              border: 'none',
-              background: 'transparent',
-              outline: 'none',
-              fontSize: '14px',
-              color: C.text,
-            }}
-          />
-        </div>
-      </div>
-
-      {/* Tabs */}
-      <div style={{
-        display: 'flex',
-        padding: '0 16px',
-        gap: '4px',
-        marginBottom: '8px',
-      }}>
-        <button
-          onClick={() => setTab('chats')}
-          style={{
-            flex: 1,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '6px',
-            padding: '10px',
-            border: 'none',
-            borderRadius: C.radiusSm,
-            cursor: 'pointer',
-            fontSize: '13px',
-            fontWeight: tab === 'chats' ? '600' : '400',
-            background: tab === 'chats' ? C.primary : 'transparent',
-            color: tab === 'chats' ? C.textInverse : C.textSecondary,
-            transition: 'all 0.2s',
-          }}
-        >
-          <Icons.Chat />
-          Chats
-        </button>
-        <button
-          onClick={() => setTab('requests')}
-          style={{
-            flex: 1,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '6px',
-            padding: '10px',
-            border: 'none',
-            borderRadius: C.radiusSm,
-            cursor: 'pointer',
-            fontSize: '13px',
-            fontWeight: tab === 'requests' ? '600' : '400',
-            background: tab === 'requests' ? C.primary : 'transparent',
-            color: tab === 'requests' ? C.textInverse : C.textSecondary,
-            transition: 'all 0.2s',
-            position: 'relative',
-          }}
-        >
-          <Icons.Users />
-          Pedidos
-          {requests.length > 0 && (
-            <span style={{
-              position: 'absolute',
-              top: '-4px',
-              right: '8px',
-              background: C.danger,
-              color: C.textInverse,
-              borderRadius: '10px',
-              padding: '2px 6px',
-              fontSize: '10px',
-              fontWeight: '700',
-              minWidth: '18px',
-              textAlign: 'center',
-            }}>
-              {requests.length}
-            </span>
-          )}
-        </button>
-      </div>
-
-      {/* Contacts List */}
-      <div style={{
-        flex: 1,
-        overflowY: 'auto',
-        padding: '8px',
-      }}>
-        {tab === 'chats' && friends.map(f => (
-          <div
-            key={f.id}
-            onClick={() => handleSelectFriend(f)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              padding: '12px',
-              borderRadius: C.radiusSm,
-              cursor: 'pointer',
-              marginBottom: '4px',
-              background: selFriend?.id === f.id ? C.surfaceAlt : 'transparent',
-              border: selFriend?.id === f.id ? `2px solid ${C.primary}` : '2px solid transparent',
-              transition: 'all 0.2s',
-            }}
-          >
-            <div style={{
-              width: '48px',
-              height: '48px',
-              borderRadius: C.radiusSm,
-              background: `linear-gradient(135deg, ${C.primary}, ${C.accent})`,
-              color: C.textInverse,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: '700',
-              fontSize: '16px',
-              position: 'relative',
-              flexShrink: 0,
-            }}>
-              {ini(f.username)}
-              <span style={{
-                position: 'absolute',
-                bottom: '-2px',
-                right: '-2px',
-                width: '14px',
-                height: '14px',
-                borderRadius: '50%',
-                border: `2px solid ${C.surface}`,
-                background: f.online ? C.online : C.offline,
-              }} />
-            </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontWeight: '600', fontSize: '14px', color: C.text }}>
-                {f.username}
-              </div>
-              <div style={{ fontSize: '12px', color: C.textMuted, marginTop: '2px' }}>
-                {f.telefone}
-              </div>
-            </div>
-          </div>
-        ))}
-        {tab === 'requests' && requests.map(r => (
-          <div
-            key={r.id}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              padding: '12px',
-              background: C.surfaceAlt,
-              borderRadius: C.radiusSm,
-              marginBottom: '8px',
-            }}
-          >
-            <div style={{
-              width: '48px',
-              height: '48px',
-              borderRadius: C.radiusSm,
-              background: `linear-gradient(135deg, ${C.secondary}, ${C.primary})`,
-              color: C.textInverse,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: '700',
-              fontSize: '16px',
-              flexShrink: 0,
-            }}>
-              {ini(r.remetente)}
-            </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontWeight: '600', fontSize: '14px', color: C.text }}>
-                {r.remetente}
-              </div>
-              <div style={{ fontSize: '12px', color: C.textMuted, marginTop: '2px' }}>
-                {r.telefone}
-              </div>
-            </div>
-            <div style={{ display: 'flex', gap: '4px' }}>
-              <button
-                onClick={() => acceptReq(r.id)}
-                style={{
-                  padding: '8px',
-                  background: C.success,
-                  border: 'none',
-                  borderRadius: C.radiusSm,
-                  color: C.textInverse,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Icons.Check />
-              </button>
-              <button
-                onClick={() => rejectReq(r.id)}
-                style={{
-                  padding: '8px',
-                  background: 'transparent',
-                  border: `2px solid ${C.danger}`,
-                  borderRadius: C.radiusSm,
-                  color: C.danger,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Icons.CloseCircle />
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-
   // ===== DASHBOARD =====
   return (
-    <div style={{
-      height: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-      background: C.bg,
-      overflow: 'hidden',
-    }}>
-      <style>{`
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { margin: 0; padding: 0; overflow: hidden; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: ${C.border}; border-radius: 3px; }
-        @keyframes slideIn {
-          from { transform: translateX(-100%); }
-          to { transform: translateX(0); }
-        }
-        @keyframes slideOut {
-          from { transform: translateX(0); }
-          to { transform: translateX(-100%); }
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-      `}</style>
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', background: '#f0f2f5', overflow: 'hidden' }}>
+      <style>{css}</style>
 
       {/* HEADER */}
-      <header style={{
-        background: C.surface,
-        borderBottom: `1px solid ${C.border}`,
-        padding: '12px 16px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        boxShadow: C.shadow,
-        zIndex: 100,
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          {isMobile && (
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                padding: '8px',
-                color: C.text,
-                display: 'flex',
-                alignItems: 'center',
-              }}
-            >
-              {sidebarOpen ? <Icons.Close /> : <Icons.Menu />}
-            </button>
-          )}
-          <h1 style={{
-            fontSize: isMobile ? '18px' : '20px',
-            fontWeight: '800',
-            background: `linear-gradient(135deg, ${C.primary}, ${C.accent})`,
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-          }}>
-            <Icons.Lock />
-            Haremessenger
-          </h1>
+      <div style={{ background: '#fff', padding: '10px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #e8e8e8', flexShrink: 0, zIndex: 100 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          {isMobile && <button onClick={() => setSidebarOpen(!sidebarOpen)} style={iconBtn}>{sidebarOpen ? <Icons.Close /> : <Icons.Menu />}</button>}
+          <span style={{ fontSize: isMobile ? 16 : 18, fontWeight: 700, color: '#dc2626' }}><Icons.Lock /> Haremessenger</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <button
-            onClick={notificationsEnabled ? disableNotifications : enableNotifications}
-            style={{
-              padding: '8px 12px',
-              background: notificationsEnabled ? `${C.success}15` : 'transparent',
-              border: `2px solid ${notificationsEnabled ? C.success : C.border}`,
-              borderRadius: C.radiusSm,
-              cursor: 'pointer',
-              fontSize: '16px',
-              color: notificationsEnabled ? C.success : C.textMuted,
-              display: 'flex',
-              alignItems: 'center',
-            }}
-            title={notificationsEnabled ? 'Desativar notificações' : 'Ativar notificações'}
-          >
-            {notificationsEnabled ? '🔔' : '🔕'}
-          </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <button onClick={notificationsEnabled ? disableNotifications : enableNotifications} style={smBtn(notificationsEnabled)}>{notificationsEnabled ? <Icons.Bell /> : <Icons.BellOff />}</button>
           {!isMobile && (
             <>
-              <button
-                onClick={() => setShowSearch(true)}
-                style={{
-                  padding: '8px 12px',
-                  background: C.primary,
-                  border: 'none',
-                  borderRadius: C.radiusSm,
-                  cursor: 'pointer',
-                  color: C.textInverse,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  position: 'relative',
-                }}
-              >
-                <Icons.PersonAdd />
-                Adicionar
-                {requests.length > 0 && (
-                  <span style={{
-                    position: 'absolute',
-                    top: '-4px',
-                    right: '-4px',
-                    background: C.danger,
-                    color: C.textInverse,
-                    borderRadius: '10px',
-                    padding: '2px 6px',
-                    fontSize: '10px',
-                    fontWeight: '700',
-                  }}>
-                    {requests.length}
-                  </span>
-                )}
+              <button onClick={() => setShowSearch(true)} style={{ ...smBtn(false), background: '#dc2626', color: '#fff', border: 'none', display: 'flex', gap: 4, fontSize: 12 }}>
+                <Icons.PersonAdd /> Adicionar
+                {requests.length > 0 && <span style={{ background: '#fff', color: '#dc2626', borderRadius: 10, padding: '1px 6px', fontSize: 10, fontWeight: 700 }}>{requests.length}</span>}
               </button>
-              <div style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: C.radiusSm,
-                background: `linear-gradient(135deg, ${C.primary}, ${C.accent})`,
-                color: C.textInverse,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: '700',
-                fontSize: '14px',
-              }}>
-                {ini(user?.username)}
-              </div>
-              <span style={{ fontWeight: '600', fontSize: '14px', color: C.text }}>
-                {user?.username}
-              </span>
+              <div style={{ width: 32, height: 32, borderRadius: 8, background: 'linear-gradient(135deg, #dc2626, #06b6d4)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 12 }}>{ini(user?.username)}</div>
+              <span style={{ fontWeight: 600, fontSize: 13, color: '#333' }}>{user?.username}</span>
             </>
           )}
-          <button
-            onClick={doLogout}
-            style={{
-              padding: '8px 16px',
-              background: 'transparent',
-              border: `2px solid ${C.border}`,
-              borderRadius: C.radiusSm,
-              cursor: 'pointer',
-              fontSize: '13px',
-              fontWeight: '600',
-              color: C.textSecondary,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-            }}
-          >
-            <Icons.Logout />
-            {!isMobile && 'Sair'}
+          <button onClick={doLogout} style={{ ...smBtn(false), color: '#dc2626', display: 'flex', gap: 4, fontSize: 12, fontWeight: 600 }}>
+            <Icons.Logout /> {!isMobile && 'Sair'}
           </button>
         </div>
-      </header>
+      </div>
 
-      {/* MAIN CONTENT */}
-      <div style={{
-        flex: 1,
-        display: 'flex',
-        position: 'relative',
-        overflow: 'hidden',
-      }}>
+      {/* MAIN */}
+      <div style={{ flex: 1, display: 'flex', position: 'relative', overflow: 'hidden' }}>
         {/* SIDEBAR */}
         <div style={{
-          width: isMobile ? '100%' : '380px',
-          height: '100%',
-          background: C.surface,
-          borderRight: isMobile ? 'none' : `1px solid ${C.border}`,
-          display: isMobile && !sidebarOpen ? 'none' : 'flex',
-          flexDirection: 'column',
-          position: isMobile ? 'absolute' : 'relative',
-          zIndex: 50,
-          boxShadow: isMobile ? C.shadowXl : 'none',
-          animation: isMobile && sidebarOpen ? 'slideIn 0.3s ease' : 'none',
+          width: isMobile ? '100%' : 350, height: '100%', background: '#fff',
+          borderRight: isMobile ? 'none' : '1px solid #e8e8e8',
+          display: isMobile && !sidebarOpen ? 'none' : 'flex', flexDirection: 'column',
+          position: isMobile ? 'absolute' : 'relative', zIndex: 50,
+          boxShadow: isMobile ? '0 0 30px rgba(0,0,0,0.2)' : 'none',
+          animation: isMobile && sidebarOpen ? 'slideIn 0.2s ease' : 'none'
         }}>
-          {sidebarContent}
-        </div>
-
-        {/* OVERLAY MOBILE */}
-        {isMobile && sidebarOpen && (
-          <div
-            onClick={() => setSidebarOpen(false)}
-            style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'rgba(0,0,0,0.5)',
-              zIndex: 40,
-            }}
-          />
-        )}
-
-        {/* CHAT AREA */}
-        <div style={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          background: C.bg,
-        }}>
-          {selFriend ? (
-            <>
-              {/* Chat Header */}
-              <div style={{
-                padding: '16px',
-                background: C.surface,
-                borderBottom: `1px solid ${C.border}`,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                boxShadow: C.shadow,
-              }}>
-                {isMobile && (
-                  <button
-                    onClick={() => {
-                      setSelFriend(null);
-                      setSidebarOpen(true);
-                    }}
-                    style={{
-                      background: 'transparent',
-                      border: 'none',
-                      cursor: 'pointer',
-                      padding: '8px',
-                      color: C.text,
-                      display: 'flex',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <Icons.ChevronLeft />
-                  </button>
-                )}
-                <div style={{
-                  width: '44px',
-                  height: '44px',
-                  borderRadius: C.radiusSm,
-                  background: `linear-gradient(135deg, ${C.primary}, ${C.accent})`,
-                  color: C.textInverse,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: '700',
-                  fontSize: '16px',
-                  flexShrink: 0,
-                }}>
-                  {ini(selFriend.username)}
-                </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: '700', fontSize: '16px', color: C.text }}>
-                    {selFriend.username}
+          <div style={{ display: 'flex', padding: '10px', gap: 4, flexShrink: 0 }}>
+            <button onClick={() => setTab('chats')} style={tab === 'chats' ? sideTabOn : sideTabOff}><Icons.Chat /> Chats</button>
+            <button onClick={() => setTab('requests')} style={tab === 'requests' ? sideTabOn : sideTabOff}><Icons.Users /> Pedidos{requests.length > 0 && <span style={{ marginLeft: 4, background: '#ef4444', color: '#fff', borderRadius: 8, padding: '1px 5px', fontSize: 9 }}>{requests.length}</span>}</button>
+          </div>
+          <div style={{ flex: 1, overflowY: 'auto', padding: '4px 8px' }}>
+            {tab === 'chats' && (
+              <>
+                <div onClick={() => selectFriend({ id: 'ai' })} style={{ ...friendItem, background: aiChat ? '#f0fdf4' : 'transparent', border: aiChat ? '1px solid #10b981' : '1px solid transparent' }}>
+                  <div style={{ width: 42, height: 42, borderRadius: 10, background: 'linear-gradient(135deg, #10b981, #06b6d4)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0 }}>🤖</div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontWeight: 600, fontSize: 13, color: '#1a1a2e', display: 'flex', alignItems: 'center', gap: 6 }}>
+                      Thunderbold_AI
+                      <span style={{ fontSize: 9, background: '#10b98120', color: '#10b981', padding: '1px 6px', borderRadius: 6, fontWeight: 600 }}>IA</span>
+                    </div>
+                    <div style={{ fontSize: 11, color: '#10b981' }}>Online</div>
                   </div>
-                  <div style={{ fontSize: '12px', color: C.textMuted, marginTop: '2px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span style={{
-                      width: '8px',
-                      height: '8px',
-                      borderRadius: '50%',
-                      background: selFriend.online ? C.online : C.offline,
-                      display: 'inline-block',
-                    }} />
-                    {selFriend.online ? 'Online' : 'Offline'}
-                  </div>
+                  <Icons.Bot />
                 </div>
-              </div>
-
-              {/* Messages */}
-              <div style={{
-                flex: 1,
-                overflowY: 'auto',
-                padding: '20px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '12px',
-              }}>
-                {msgs.map(m => (
-                  <div
-                    key={m.id}
-                    style={{
-                      maxWidth: '70%',
-                      padding: '12px 16px',
-                      borderRadius: m.remetente === user.username
-                        ? '16px 16px 4px 16px'
-                        : '16px 16px 16px 4px',
-                      background: m.remetente === user.username
-                        ? `linear-gradient(135deg, ${C.primary}, ${C.accent})`
-                        : C.surface,
-                      color: m.remetente === user.username ? C.textInverse : C.text,
-                      alignSelf: m.remetente === user.username ? 'flex-end' : 'flex-start',
-                      boxShadow: C.shadow,
-                      fontSize: '14px',
-                      lineHeight: 1.5,
-                      wordBreak: 'break-word',
-                    }}
-                  >
-                    {typeof m.conteudo === 'string' ? m.conteudo : '[Mensagem criptografada]'}
-                    <div style={{
-                      fontSize: '10px',
-                      marginTop: '4px',
-                      textAlign: 'right',
-                      opacity: 0.7,
-                    }}>
-                      {ft(m.enviada_em)}
+                <div style={{ height: 1, background: '#f0f0f0', margin: '4px 0' }} />
+                {friends.map(f => (
+                  <div key={f.id} onClick={() => selectFriend(f)} style={{ ...friendItem, background: selFriend?.id === f.id ? '#fef2f2' : 'transparent', border: selFriend?.id === f.id ? '1px solid #dc2626' : '1px solid transparent' }}>
+                    <div style={{ width: 42, height: 42, borderRadius: 10, background: 'linear-gradient(135deg, #dc2626, #06b6d4)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 13, flexShrink: 0, position: 'relative' }}>
+                      {ini(f.username)}
+                      <span style={{ position: 'absolute', bottom: -1, right: -1, width: 10, height: 10, borderRadius: '50%', border: '2px solid #fff', background: f.online ? '#10b981' : '#ccc' }} />
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontWeight: 600, fontSize: 13, color: '#1a1a2e' }}>{f.username}</div>
+                      <div style={{ fontSize: 11, color: '#999' }}>{f.telefone}</div>
                     </div>
                   </div>
                 ))}
+              </>
+            )}
+            {tab === 'requests' && requests.map(r => (
+              <div key={r.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: 10, background: '#f8f8f8', borderRadius: 10, marginBottom: 4 }}>
+                <div style={{ width: 38, height: 38, borderRadius: 10, background: 'linear-gradient(135deg, #dc2626, #06b6d4)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 12, flexShrink: 0 }}>{ini(r.remetente)}</div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 600, fontSize: 13, color: '#1a1a2e' }}>{r.remetente}</div>
+                  <div style={{ fontSize: 11, color: '#999' }}>{r.telefone}</div>
+                </div>
+                <button onClick={() => acceptReq(r.id)} style={{ padding: 6, background: '#10b981', border: 'none', borderRadius: 6, color: '#fff', cursor: 'pointer' }}><Icons.Check /></button>
+                <button onClick={() => rejectReq(r.id)} style={{ padding: 6, background: 'transparent', border: '1px solid #ef4444', borderRadius: 6, color: '#ef4444', cursor: 'pointer' }}><Icons.CloseCircle /></button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {isMobile && sidebarOpen && <div onClick={() => setSidebarOpen(false)} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.3)', zIndex: 40 }} />}
+
+        {/* CHAT */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: '#f0f2f5', minWidth: 0 }}>
+          {aiChat ? (
+            <>
+              <div style={chatHeader}>
+                {isMobile && <button onClick={() => { setAiChat(false); setSidebarOpen(true); }} style={iconBtn}><Icons.ChevronLeft /></button>}
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg, #10b981, #06b6d4)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0 }}>🤖</div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 700, fontSize: 14, color: '#1a1a2e' }}>Thunderbold_AI</div>
+                  <div style={{ fontSize: 11, color: '#10b981' }}>Online</div>
+                </div>
+                <button onClick={clearAiHistory} style={iconBtn}><Icons.Trash /></button>
+              </div>
+              <div style={msgArea}>
+                {aiMessages.map(m => (
+                  <div key={m.id} style={{ maxWidth: '70%', padding: '8px 12px', borderRadius: m.role === 'user' ? '12px 12px 4px 12px' : '12px 12px 12px 4px', background: m.role === 'user' ? '#dc2626' : '#fff', color: m.role === 'user' ? '#fff' : '#1a1a2e', alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', fontSize: 13, animation: 'fadeMsg 0.2s ease', whiteSpace: 'pre-wrap' }}>
+                    <div style={{ fontWeight: 600, fontSize: 10, marginBottom: 2, opacity: 0.6 }}>{m.role === 'user' ? user?.username : 'Thunderbold_AI'}</div>
+                    {m.content}
+                  </div>
+                ))}
+                {aiLoading && <div style={{ alignSelf: 'flex-start', padding: 10, background: '#fff', borderRadius: 12, fontSize: 13, color: '#999' }}>Digitando...</div>}
                 <div ref={msgEnd} />
               </div>
-
-              {/* Input */}
-              <div style={{
-                padding: '16px',
-                background: C.surface,
-                borderTop: `1px solid ${C.border}`,
-                display: 'flex',
-                gap: '12px',
-                alignItems: 'center',
-              }}>
-                <input
-                  value={newMsg}
-                  onChange={e => setNewMsg(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), sendMsg())}
-                  placeholder="Digite sua mensagem..."
-                  style={{
-                    flex: 1,
-                    padding: '14px 18px',
-                    background: C.surfaceAlt,
-                    border: `2px solid ${C.border}`,
-                    borderRadius: C.radiusFull,
-                    fontSize: '14px',
-                    outline: 'none',
-                    color: C.text,
-                  }}
-                />
-                <button
-                  onClick={sendMsg}
-                  disabled={!newMsg.trim()}
-                  style={{
-                    width: '48px',
-                    height: '48px',
-                    borderRadius: '50%',
-                    background: `linear-gradient(135deg, ${C.primary}, ${C.accent})`,
-                    border: 'none',
-                    color: C.textInverse,
-                    cursor: newMsg.trim() ? 'pointer' : 'not-allowed',
-                    opacity: newMsg.trim() ? 1 : 0.5,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: C.shadowMd,
-                    flexShrink: 0,
-                  }}
-                >
-                  <Icons.Send />
-                </button>
+              <div style={chatInputBarSimple}>
+                <input value={newMsg} onChange={e => setNewMsg(e.target.value)} onKeyDown={e => e.key === 'Enter' && sendToAI()} placeholder="Pergunte ao Thunderbold_AI..." style={msgInput} />
+                <button onClick={sendToAI} disabled={!newMsg.trim() || aiLoading} style={sendBtn(!newMsg.trim() || aiLoading, '#10b981')}><Icons.Send /></button>
+              </div>
+            </>
+          ) : selFriend ? (
+            <>
+              <div style={chatHeader}>
+                {isMobile && <button onClick={() => { setSelFriend(null); setSidebarOpen(true); }} style={iconBtn}><Icons.ChevronLeft /></button>}
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg, #dc2626, #06b6d4)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 13, flexShrink: 0, position: 'relative' }}>
+                  {ini(selFriend.username)}
+                  <span style={{ position: 'absolute', bottom: -1, right: -1, width: 10, height: 10, borderRadius: '50%', border: '2px solid #fff', background: selFriend.online ? '#10b981' : '#ccc' }} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 700, fontSize: 14, color: '#1a1a2e' }}>{selFriend.username}</div>
+                  <div style={{ fontSize: 11, color: '#999' }}>{selFriend.online ? 'Online' : 'Offline'}</div>
+                </div>
+              </div>
+              <div style={msgArea}>
+                {msgs.map(m => {
+                  // Verificar se é mídia
+                  let isMidia = false;
+                  let midiaData = null;
+                  try {
+                    if (typeof m.conteudo === 'string' && m.conteudo.startsWith('{')) {
+                      const dados = JSON.parse(m.conteudo);
+                      if (dados && dados.tipo === 'midia') { isMidia = true; midiaData = dados; }
+                    }
+                  } catch (e) {}
+                  
+                  if (isMidia && midiaData) {
+                    const emoji = { 'IMAGEM': '🖼️', 'VIDEO': '🎬', 'AUDIO': '🎵' };
+                    return (
+                      <div key={m.id} style={{ maxWidth: '70%', padding: '10px 13px', borderRadius: m.remetente === user.username ? '12px 12px 4px 12px' : '12px 12px 12px 4px', background: m.remetente === user.username ? '#dc2626' : '#fff', color: m.remetente === user.username ? '#fff' : '#1a1a2e', alignSelf: m.remetente === user.username ? 'flex-end' : 'flex-start', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', fontSize: 13, animation: 'fadeMsg 0.2s ease' }}>
+                        <div style={{ fontSize: 28, marginBottom: 4, textAlign: 'center' }}>{emoji[midiaData.tipo_midia] || '📎'}</div>
+                        <div style={{ fontWeight: 600, fontSize: 12, marginBottom: 2 }}>{midiaData.nome_original || `${midiaData.tipo_midia} enviado`}</div>
+                        <div style={{ fontSize: 10, opacity: 0.7, marginBottom: 6 }}>{(midiaData.tamanho / 1024).toFixed(1)} KB</div>
+                        <button onClick={() => downloadMidia(midiaData.arquivo_id)} style={{ padding: '6px 12px', background: m.remetente === user.username ? 'rgba(255,255,255,0.2)' : '#10b981', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', fontSize: 11, fontWeight: 600, width: '100%' }}>
+                          ⬇️ Baixar
+                        </button>
+                        <div style={{ fontSize: 9, marginTop: 4, textAlign: 'right', opacity: 0.6 }}>{ft(m.enviada_em)}</div>
+                      </div>
+                    );
+                  }
+                  
+                  return (
+                    <div key={m.id} style={{ maxWidth: '70%', padding: '8px 12px', borderRadius: m.remetente === user.username ? '12px 12px 4px 12px' : '12px 12px 12px 4px', background: m.remetente === user.username ? '#dc2626' : '#fff', color: m.remetente === user.username ? '#fff' : '#1a1a2e', alignSelf: m.remetente === user.username ? 'flex-end' : 'flex-start', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', fontSize: 13, animation: 'fadeMsg 0.2s ease' }}>
+                      {typeof m.conteudo === 'string' ? m.conteudo : '[Mensagem]'}
+                      <div style={{ fontSize: 9, marginTop: 3, textAlign: 'right', opacity: 0.5 }}>{ft(m.enviada_em)}</div>
+                    </div>
+                  );
+                })}
+                <div ref={msgEnd} />
+              </div>
+              
+              {/* INPUT COM BOTÕES DE MÍDIA */}
+              <div style={chatInputBar}>
+                {isRecording ? (
+                  <button onClick={stopRecording} style={{
+                    display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px',
+                    background: '#ef4444', color: '#fff', border: 'none', borderRadius: 20,
+                    cursor: 'pointer', fontWeight: 700, fontSize: 12,
+                    animation: 'recordingPulse 1.5s infinite'
+                  }}>
+                    ⏹️ Parar {recordingType === 'audio' ? 'Áudio' : 'Vídeo'}
+                  </button>
+                ) : (
+                  <>
+                    <button onClick={() => fileInputRef.current?.click()} style={iconBtn} title="Galeria">🖼️</button>
+                    <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={handleFileUpload} accept="image/*,video/*" />
+                    <button onClick={() => cameraInputRef.current?.click()} style={iconBtn} title="Câmera">📸</button>
+                    <input type="file" ref={cameraInputRef} style={{ display: 'none' }} onChange={handleFileUpload} accept="image/*" capture="environment" />
+                    <button onClick={startAudioRecording} style={iconBtn} title="Gravar Áudio">🎤</button>
+                    <button onClick={startVideoRecording} style={iconBtn} title="Gravar Vídeo">🎥</button>
+                  </>
+                )}
+                <input value={newMsg} onChange={e => setNewMsg(e.target.value)} onKeyDown={e => e.key === 'Enter' && sendMsg()} placeholder={isRecording ? 'Gravando...' : 'Mensagem...'} style={msgInput} disabled={isRecording} />
+                <button onClick={sendMsg} disabled={!newMsg.trim() || isRecording} style={sendBtn(!newMsg.trim() || isRecording, '#dc2626')}><Icons.Send /></button>
               </div>
             </>
           ) : (
-            <div style={{
-              flex: 1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '32px',
-            }}>
-              <div style={{ textAlign: 'center', maxWidth: '400px' }}>
-                <div style={{
-                  fontSize: '64px',
-                  marginBottom: '16px',
-                  opacity: 0.3,
-                }}>
-                  💬
-                </div>
-                <h2 style={{
-                  fontSize: '20px',
-                  fontWeight: '700',
-                  color: C.text,
-                  marginBottom: '8px',
-                }}>
-                  {isMobile ? 'Selecione uma conversa' : 'Selecione um amigo'}
-                </h2>
-                <p style={{ fontSize: '14px', color: C.textMuted, lineHeight: 1.6 }}>
-                  {isMobile
-                    ? 'Toque no menu para ver suas conversas'
-                    : 'Escolha uma conversa na lista ao lado para começar a trocar mensagens de forma segura.'
-                  }
-                </p>
+            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: 48, opacity: 0.08 }}>💬</div>
+                <h2 style={{ fontSize: 17, color: '#1a1a2e', marginTop: 8 }}>{isMobile ? 'Conversas' : 'Seus chats'}</h2>
+                <p style={{ fontSize: 13, color: '#999', margin: '4px 0 16px' }}>{isMobile ? 'Toque no menu' : 'Escolha um amigo'}</p>
+                <button onClick={() => selectFriend({ id: 'ai' })} style={{ padding: '10px 20px', background: '#10b981', color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer', fontWeight: 600, fontSize: 13, display: 'flex', alignItems: 'center', gap: 6, margin: '0 auto' }}>
+                  <Icons.Bot /> Falar com Thunderbold_AI
+                </button>
               </div>
             </div>
           )}
         </div>
       </div>
 
-      {/* Mobile Bottom Navigation */}
-      {isMobile && !selFriend && (
-        <div style={{
-          background: C.surface,
-          borderTop: `1px solid ${C.border}`,
-          padding: '8px 16px',
-          display: 'flex',
-          justifyContent: 'space-around',
-          boxShadow: '0 -4px 6px rgba(0,0,0,0.05)',
-        }}>
-          <button
-            onClick={() => {
-              setTab('chats');
-              setSidebarOpen(true);
-            }}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '4px',
-              background: 'transparent',
-              border: 'none',
-              color: tab === 'chats' ? C.primary : C.textMuted,
-              fontSize: '12px',
-              fontWeight: tab === 'chats' ? '600' : '400',
-              cursor: 'pointer',
-              padding: '8px',
-            }}
-          >
-            <Icons.Chat />
-            Chats
-          </button>
-          <button
-            onClick={() => {
-              setTab('requests');
-              setSidebarOpen(true);
-            }}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '4px',
-              background: 'transparent',
-              border: 'none',
-              color: tab === 'requests' ? C.primary : C.textMuted,
-              fontSize: '12px',
-              fontWeight: tab === 'requests' ? '600' : '400',
-              cursor: 'pointer',
-              padding: '8px',
-              position: 'relative',
-            }}
-          >
-            <Icons.Users />
-            Pedidos
-            {requests.length > 0 && (
-              <span style={{
-                position: 'absolute',
-                top: '2px',
-                right: 'calc(50% - 20px)',
-                background: C.danger,
-                color: C.textInverse,
-                borderRadius: '10px',
-                padding: '2px 6px',
-                fontSize: '10px',
-                fontWeight: '700',
-                minWidth: '18px',
-                textAlign: 'center',
-              }}>
-                {requests.length}
-              </span>
-            )}
-          </button>
-          <button
-            onClick={() => setShowSearch(true)}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '4px',
-              background: 'transparent',
-              border: 'none',
-              color: C.textMuted,
-              fontSize: '12px',
-              fontWeight: '400',
-              cursor: 'pointer',
-              padding: '8px',
-            }}
-          >
-            <Icons.PersonAdd />
-            Adicionar
-          </button>
+      {/* MOBILE NAV */}
+      {isMobile && !selFriend && !aiChat && (
+        <div style={{ background: '#fff', padding: '6px 8px', display: 'flex', justifyContent: 'space-around', borderTop: '1px solid #e8e8e8', flexShrink: 0 }}>
+          <button onClick={() => { setTab('chats'); setSidebarOpen(true); }} style={mobBtn}><Icons.Chat /><span style={{ fontSize: 10 }}>Chats</span></button>
+          <button onClick={() => { setTab('requests'); setSidebarOpen(true); }} style={mobBtn}><Icons.Users /><span style={{ fontSize: 10 }}>Pedidos</span>{requests.length > 0 && <span style={{ position: 'absolute', top: 0, right: 4, background: '#ef4444', color: '#fff', borderRadius: 8, padding: '1px 4px', fontSize: 8 }}>{requests.length}</span>}</button>
+          <button onClick={() => selectFriend({ id: 'ai' })} style={mobBtn}><Icons.Bot /><span style={{ fontSize: 10 }}>IA</span></button>
+          <button onClick={() => setShowSearch(true)} style={mobBtn}><Icons.PersonAdd /><span style={{ fontSize: 10 }}>Add</span></button>
         </div>
       )}
 
       {/* SEARCH MODAL */}
       {showSearch && (
-        <div
-          onClick={() => setShowSearch(false)}
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-            padding: '16px',
-          }}
-        >
-          <div
-            onClick={e => e.stopPropagation()}
-            style={{
-              background: C.surface,
-              borderRadius: C.radiusLg,
-              padding: '32px',
-              width: '100%',
-              maxWidth: '480px',
-              boxShadow: C.shadowXl,
-            }}
-          >
-            <h2 style={{
-              fontSize: '20px',
-              fontWeight: '700',
-              color: C.text,
-              marginBottom: '8px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-            }}>
-              <Icons.PersonAdd />
-              Buscar Amigo
-            </h2>
-            <p style={{
-              fontSize: '14px',
-              color: C.textMuted,
-              marginBottom: '24px',
-              lineHeight: 1.5,
-            }}>
-              Digite o número de telefone para encontrar alguém e enviar um pedido de amizade.
-            </p>
-            <div style={{ display: 'flex', gap: '8px', marginBottom: '20px' }}>
-              <input
-                type="tel"
-                placeholder="+55 (00) 00000-0000"
-                value={searchPhone}
-                onChange={e => setSearchPhone(e.target.value)}
-                style={{
-                  flex: 1,
-                  padding: '12px 16px',
-                  background: C.surfaceAlt,
-                  border: `2px solid ${C.border}`,
-                  borderRadius: C.radiusSm,
-                  fontSize: '14px',
-                  outline: 'none',
-                }}
-              />
-              <button
-                onClick={doSearch}
-                style={{
-                  padding: '12px 24px',
-                  background: `linear-gradient(135deg, ${C.primary}, ${C.accent})`,
-                  color: C.textInverse,
-                  border: 'none',
-                  borderRadius: C.radiusSm,
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                Buscar
-              </button>
+        <div onClick={() => setShowSearch(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 16 }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: '#fff', borderRadius: 16, padding: 24, width: '100%', maxWidth: 400 }}>
+            <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}><Icons.PersonAdd /> Buscar Amigo</h2>
+            <p style={{ fontSize: 12, color: '#999', marginBottom: 12 }}>Digite o número de telefone.</p>
+            <div style={{ display: 'flex', gap: 6, marginBottom: 12 }}>
+              <input type="tel" placeholder="+55 (00) 00000-0000" value={searchPhone} onChange={e => setSearchPhone(e.target.value)} style={{ flex: 1, padding: '10px', background: '#f0f2f5', border: '1px solid #e0e0e0', borderRadius: 8, fontSize: 14, outline: 'none' }} />
+              <button onClick={doSearch} style={{ padding: '10px 16px', background: '#dc2626', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer', fontSize: 13 }}>Buscar</button>
             </div>
             {searchResult?.encontrado && (
-              <div style={{
-                padding: '16px',
-                background: C.surfaceAlt,
-                borderRadius: C.radiusSm,
-                marginBottom: '16px',
-              }}>
-                <div style={{ fontWeight: '600', fontSize: '16px', color: C.text, marginBottom: '4px' }}>
-                  {searchResult.usuario.username}
-                </div>
-                <div style={{ fontSize: '14px', color: C.textMuted, marginBottom: '12px' }}>
-                  {searchResult.usuario.telefone}
-                </div>
-                {searchResult.is_amigo ? (
-                  <span style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '4px',
-                    padding: '6px 12px',
-                    background: `${C.success}15`,
-                    color: C.success,
-                    borderRadius: C.radiusFull,
-                    fontSize: '13px',
-                    fontWeight: '600',
-                  }}>
-                    ✅ Já são amigos
-                  </span>
-                ) : searchResult.solicitacao_enviada ? (
-                  <span style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '4px',
-                    padding: '6px 12px',
-                    background: `${C.warning}15`,
-                    color: C.warning,
-                    borderRadius: C.radiusFull,
-                    fontSize: '13px',
-                    fontWeight: '600',
-                  }}>
-                    ⏳ Aguardando
-                  </span>
-                ) : (
-                  <button
-                    onClick={sendReq}
-                    style={{
-                      width: '100%',
-                      padding: '12px',
-                      background: `linear-gradient(135deg, ${C.primary}, ${C.accent})`,
-                      color: C.textInverse,
-                      border: 'none',
-                      borderRadius: C.radiusSm,
-                      fontSize: '14px',
-                      fontWeight: '600',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    🤝 Adicionar Amigo
-                  </button>
-                )}
+              <div style={{ padding: 12, background: '#f8f8f8', borderRadius: 10, marginBottom: 12 }}>
+                <div style={{ fontWeight: 600, fontSize: 14 }}>{searchResult.usuario.username}</div>
+                <div style={{ fontSize: 12, color: '#999', marginBottom: 8 }}>{searchResult.usuario.telefone}</div>
+                {searchResult.is_amigo ? <span style={{ color: '#10b981', fontWeight: 600, fontSize: 12 }}>✅ Já são amigos</span> :
+                 searchResult.solicitacao_enviada ? <span style={{ color: '#f59e0b', fontWeight: 600, fontSize: 12 }}>⏳ Aguardando</span> :
+                 <button onClick={sendReq} style={{ width: '100%', padding: 8, background: '#dc2626', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer' }}>Adicionar</button>}
               </div>
             )}
-            <button
-              onClick={() => setShowSearch(false)}
-              style={{
-                width: '100%',
-                padding: '12px',
-                background: C.surfaceAlt,
-                border: `2px solid ${C.border}`,
-                borderRadius: C.radiusSm,
-                fontSize: '14px',
-                fontWeight: '600',
-                color: C.textSecondary,
-                cursor: 'pointer',
-              }}
-            >
-              Fechar
-            </button>
+            <button onClick={() => setShowSearch(false)} style={{ width: '100%', padding: 10, background: '#f0f2f5', border: 'none', borderRadius: 8, cursor: 'pointer', color: '#666', fontWeight: 600 }}>Fechar</button>
           </div>
         </div>
       )}
     </div>
   );
 }
+
+// ===== ESTILOS =====
+const inputCss = { width: '100%', padding: '12px', background: '#f0f2f5', border: '1px solid #e0e0e0', borderRadius: 8, fontSize: 14, outline: 'none', marginBottom: 12, boxSizing: 'border-box', color: '#1a1a2e' };
+const btnCss = (l) => ({ width: '100%', padding: 12, background: '#dc2626', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: l ? 'not-allowed' : 'pointer', opacity: l ? 0.7 : 1 });
+const tabOn = { flex: 1, padding: 10, border: 'none', borderRadius: 6, background: '#fff', color: '#dc2626', fontWeight: 600, cursor: 'pointer', fontSize: 13, boxShadow: '0 1px 3px rgba(0,0,0,0.08)' };
+const tabOff = { flex: 1, padding: 10, border: 'none', borderRadius: 6, background: 'transparent', color: '#999', fontWeight: 500, cursor: 'pointer', fontSize: 13 };
+const iconBtn = { background: 'transparent', border: 'none', cursor: 'pointer', padding: 6, color: '#333', display: 'flex', alignItems: 'center', fontSize: 18 };
+const smBtn = (active) => ({ padding: '6px 10px', borderRadius: 6, background: active ? '#fef2f2' : 'transparent', border: active ? '1px solid #dc2626' : '1px solid #e0e0e0', cursor: 'pointer', color: active ? '#dc2626' : '#666', display: 'flex', alignItems: 'center' });
+const sideTabOn = { flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, padding: '8px', border: 'none', borderRadius: 8, background: '#dc2626', color: '#fff', fontWeight: 600, fontSize: 12, cursor: 'pointer', position: 'relative' };
+const sideTabOff = { flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, padding: '8px', border: 'none', borderRadius: 8, background: 'transparent', color: '#666', fontWeight: 500, fontSize: 12, cursor: 'pointer', position: 'relative' };
+const friendItem = { display: 'flex', alignItems: 'center', gap: 10, padding: 10, borderRadius: 10, cursor: 'pointer', marginBottom: 2, transition: 'all 0.1s' };
+const mobBtn = { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, background: 'transparent', border: 'none', color: '#666', cursor: 'pointer', padding: '4px 8px', fontSize: 16, position: 'relative' };
+
+const chatHeader = { padding: '10px 14px', background: '#fff', display: 'flex', alignItems: 'center', gap: 10, borderBottom: '1px solid #e8e8e8', flexShrink: 0 };
+const msgArea = { flex: 1, overflowY: 'auto', padding: '14px', display: 'flex', flexDirection: 'column', gap: 6 };
+const msgInput = { flex: 1, padding: '10px 14px', background: '#f0f2f5', border: '1px solid #e0e0e0', borderRadius: 20, fontSize: 14, outline: 'none', minWidth: 0 };
+const chatInputBar = { padding: '10px 14px', background: '#fff', display: 'flex', gap: 6, alignItems: 'center', borderTop: '1px solid #e8e8e8', flexShrink: 0, flexWrap: 'wrap' };
+const chatInputBarSimple = { padding: '10px 14px', background: '#fff', display: 'flex', gap: 8, alignItems: 'center', borderTop: '1px solid #e8e8e8', flexShrink: 0 };
+const sendBtn = (disabled, color) => ({ width: 38, height: 38, borderRadius: '50%', background: color, border: 'none', color: '#fff', cursor: disabled ? 'not-allowed' : 'pointer', opacity: disabled ? 0.5 : 1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 });
 
 export default App;
