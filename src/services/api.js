@@ -8,7 +8,7 @@ import axios from 'axios';
 const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
 
 const API_URL = isProduction 
-    ? 'https://secure-messaging-api.onrender.com/api'
+    ? ''https://secure-messaging-api-1.onrender.com/api';
     : 'http://127.0.0.1:8000/api';
 
 console.log(`🌐 API Mode: ${isProduction ? 'PRODUCTION' : 'LOCAL'}`);
