@@ -8,7 +8,7 @@ import axios from 'axios';
 const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
 
 const API_URL = isProduction 
-    ? ''https://secure-messaging-api-1.onrender.com/api';
+    ? 'https://secure-messaging-api-1.onrender.com/api'  // ← URL CORRIGIDA
     : 'http://127.0.0.1:8000/api';
 
 console.log(`🌐 API Mode: ${isProduction ? 'PRODUCTION' : 'LOCAL'}`);
@@ -20,6 +20,7 @@ const api = axios.create({
         'Content-Type': 'application/json',
         'Accept': 'application/json',
     },
+    timeout: 30000, // 30 segundos de timeout para evitar loops infinitos
 });
 
 /**
@@ -50,12 +51,28 @@ api.interceptors.response.use(
         return response;
     },
     (error) => {
+        // Tratamento específico para erros de timeout e conexão
+        if (error.code === 'ECONNABORTED' || !error.response) {
+            console.error('⏰ API offline ou sem resposta - Verifique se o servidor está rodando');
+            console.error('🔗 Tentativa de conexão com:', error.config?.baseURL);
+            
+            // Opcional: Mostrar notificação para o usuário
+            if (typeof window !== 'undefined') {
+                // Disparar evento global para mostrar mensagem amigável
+                window.dispatchEvent(new CustomEvent('api-offline', { 
+                    detail: { message: 'Servidor offline. Tentando reconectar...' }
+                }));
+            }
+        }
+        
         console.error(`❌ ${error.response?.status} ${error.config?.url}`, error.response?.data);
+        
         if (error.response?.status === 401) {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             window.location.href = '/';
         }
+        
         return Promise.reject(error);
     }
 );
