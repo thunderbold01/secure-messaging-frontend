@@ -31,23 +31,24 @@ function isTokenValid(token) {
 const BG_IMAGE = 'https://image.qwenlm.ai/public_source/0203102d-d25c-4946-aa43-9509911dcaa2/194baccdb-a9bc-41b7-9eb7-ce11fe8d83b5.png';
 
 const C = {
-  bodyBg: 'linear-gradient(135deg, #f0f2f5 0%, #e8ecf1 50%, #dde3eb 100%)',
-  glass: 'rgba(255,255,255,0.7)',
-  glassDark: 'rgba(255,255,255,0.85)',
-  glassBorder: 'rgba(0,0,0,0.08)',
-  glassBorderLight: 'rgba(0,0,0,0.05)',
-  text: '#1a1a2e',
-  textSecondary: '#4a5568',
-  textMuted: '#94a3b8',
+  bodyBg: '#f0f2f5',
+  glass: '#ffffff',
+  glassDark: '#f8f9fa',
+  glassBorder: '#e0e0e0',
+  glassBorderLight: '#eeeeee',
+  text: '#1a1a1a',
+  textSecondary: '#555555',
+  textMuted: '#999999',
   accent: '#5865F2',
   green: '#23a55a',
   danger: '#ed4245',
-  inputBg: 'rgba(0,0,0,0.04)',
-  hover: 'rgba(0,0,0,0.04)',
-  hoverBright: 'rgba(0,0,0,0.07)',
-  msgSent: 'rgba(88,101,242,0.08)',
+  inputBg: '#f5f5f5',
+  hover: '#f0f0f0',
+  hoverBright: '#e8e8e8',
+  msgSent: '#e3f2fd',
+  msgReceived: '#ffffff',
   online: '#23a55a',
-  offline: '#94a3b8',
+  offline: '#999999',
   idle: '#f0b232',
   dnd: '#ed4245',
 };
@@ -132,7 +133,7 @@ const AudioPlayer = ({ src }) => {
           : <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21"/></svg>}
       </button>
       <div style={{ flex:1 }}>
-        <div style={{ height:3, background:'rgba(255,255,255,0.1)', borderRadius:2, overflow:'hidden' }}>
+        <div style={{ height:3, background:'#e0e0e0', borderRadius:2, overflow:'hidden' }}>
           <div style={{ width:`${progress}%`, height:'100%', background:C.accent, borderRadius:2, transition:'width 0.1s linear' }} />
         </div>
         <div style={{ fontSize:10, color:C.textMuted, marginTop:2 }}>
@@ -449,7 +450,7 @@ function App() {
     if(msg.tipo === 'AUDIO') return <AudioPlayer src={safeContent} />;
     if(msg.tipo === 'VIDEO') return <video src={safeContent} controls style={{ maxWidth:330, maxHeight:250, borderRadius:12, background:'#000', display:'block' }} preload="metadata" />;
     if(msg.tipo === 'IMAGEM') return <img src={safeContent} alt="" style={{ maxWidth:330, maxHeight:280, borderRadius:12, cursor:'pointer', display:'block' }} onClick={() => setSelectedMedia(msg)} />;
-    return <div style={{ display:'flex', alignItems:'center', gap:8 }}><I.File /><span style={{ fontSize:13, color:'rgba(255,255,255,0.9)' }}>{escapeHtml(safeName)}</span></div>;
+    return <div style={{ display:'flex', alignItems:'center', gap:8 }}><I.File /><span style={{ fontSize:13, color:'#333333' }}>{escapeHtml(safeName)}</span></div>;
   };
 
   return (
@@ -457,23 +458,23 @@ function App() {
       {/* Interactive WebGL Background */}
       <div style={{ position:'absolute', inset:0, zIndex:0 }}>
         <TiltMosaic
-          background="#dce3ed"
-          baseColor="#b0bfd0"
-          accentColor="#e8edf5"
+          background="#e8eaed"
+          baseColor="#d0d4da"
+          accentColor="#f5f5f5"
           density={30}
           gap={3}
           rounded={90}
-          tilt={30}
+          tilt={15}
           reach={100}
           hover={0}
-          speed={80}
-          grain={8}
+          speed={50}
+          grain={5}
           style={{ position:'absolute', inset:0, width:'100%', height:'100%', minWidth:'unset', minHeight:'unset' }}
         />
       </div>
 
       <style>{`
-        ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:rgba(0,0,0,0.02)}::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.12);border-radius:3px}::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,0.2)}
+        ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:#f5f5f5}::-webkit-scrollbar-thumb{background:#ccc;border-radius:3px}::-webkit-scrollbar-thumb:hover{background:#aaa}
         *{box-sizing:border-box;margin:0;padding:0}input:focus,textarea:focus{outline:none}
         @keyframes fadeUp{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
@@ -487,10 +488,10 @@ function App() {
         .server-icon:hover{border-radius:16px!important;transform:scale(1.05)}
         .server-icon.active{border-radius:16px!important}
         .dm-item{transition:background 0.15s ease}
-        .dm-item:hover{background:rgba(255,255,255,0.06)!important}
-        .dm-item.active{background:rgba(255,255,255,0.08)!important}
+        .dm-item:hover{background:#f0f0f0!important}
+        .dm-item.active{background:#e8e8e8!important}
         .msg-row{transition:background 0.1s ease}
-        .msg-row:hover{background:rgba(255,255,255,0.02)}
+        .msg-row:hover{background:#f5f5f5}
         .btn-ctrl{transition:all 0.2s ease}
         .btn-ctrl:hover{transform:scale(1.08)}
         .btn-ctrl:active{transform:scale(0.95)}
@@ -506,10 +507,10 @@ function App() {
 
         {/* DM Sidebar */}
         {showSidebar && (
-          <div className="app-sidebar" style={{ width:isMobile?'100%':260, background:'rgba(255,255,255,0.85)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)', borderRight:'1px solid rgba(0,0,0,0.08)', boxShadow:'4px 0 24px rgba(0,0,0,0.06)', display:'flex', flexDirection:'column', flexShrink:0, height:'100%' }}>
+          <div className="app-sidebar" style={{ width:isMobile?'100%':260, background:'#ffffff', borderRight:'1px solid #e0e0e0', boxShadow:'2px 0 8px rgba(0,0,0,0.05)', display:'flex', flexDirection:'column', flexShrink:0, height:'100%' }}>
             {/* Search */}
             <div style={{ padding:'12px 12px 8px', flexShrink:0 }}>
-              <div style={{ display:'flex', alignItems:'center', gap:8, padding:'8px 12px', background:'rgba(0,0,0,0.04)', backdropFilter:'blur(10px)', WebkitBackdropFilter:'blur(10px)', borderRadius:8, border:'1px solid rgba(0,0,0,0.06)', boxShadow:'inset 0 1px 3px rgba(0,0,0,0.05)' }}>
+              <div style={{ display:'flex', alignItems:'center', gap:8, padding:'8px 12px', background:'#f5f5f5', borderRadius:8, border:'1px solid #e0e0e0' }}>
                 <span style={{ color:C.textMuted, display:'flex' }}><I.Search /></span>
                 <input placeholder="Encontrar ou iniciar conversa" style={{ flex:1, border:'none', background:'transparent', fontSize:13, outline:'none', color:C.text, minWidth:0, fontFamily:'"Fira Sans", sans-serif' }} />
               </div>
@@ -526,7 +527,7 @@ function App() {
                 onClick={() => setShowSearchModal(true)}>
                 <EncryptButton
                   label="Adicionar amigo"
-                  fill={C.accent}
+                  fill="#5865F2"
                   textColor="#ffffff"
                   hoverTextColor="#ffffff"
                   paddingX={16}
@@ -563,7 +564,7 @@ function App() {
                 {requests.length === 0 ? (
                   <div style={{ padding:16, textAlign:'center', color:C.textMuted, fontSize:12 }}>Nenhum pedido pendente</div>
                 ) : requests.map(r => (
-                  <div key={r.id} style={{ display:'flex', alignItems:'center', gap:10, padding:'8px 10px', borderRadius:8, background:'rgba(255,255,255,0.03)', marginBottom:4 }}>
+                  <div key={r.id} style={{ display:'flex', alignItems:'center', gap:10, padding:'8px 10px', borderRadius:8, background:'#f9f9f9', marginBottom:4 }}>
                     <Avatar name={r.remetente} size={36} />
                     <div style={{ flex:1, minWidth:0 }}>
                       <div style={{ fontWeight:600, fontSize:13, color:C.text }}>{r.remetente}</div>
@@ -571,7 +572,7 @@ function App() {
                     </div>
                     <div style={{ display:'flex', gap:4 }}>
                       <button onClick={() => acceptReq(r.id)} style={{ padding:'4px 12px', background:C.green, color:'#fff', border:'none', borderRadius:6, cursor:'pointer', fontWeight:600, fontSize:11, fontFamily:'"Fira Sans", sans-serif' }}>Aceitar</button>
-                      <button onClick={() => rejectReq(r.id)} style={{ padding:'4px 12px', background:'transparent', color:C.textMuted, border:'1px solid rgba(255,255,255,0.1)', borderRadius:6, cursor:'pointer', fontSize:11, fontFamily:'"Fira Sans", sans-serif' }}>Recusar</button>
+                      <button onClick={() => rejectReq(r.id)} style={{ padding:'4px 12px', background:'transparent', color:C.textMuted, border:'1px solid #e0e0e0', borderRadius:6, cursor:'pointer', fontSize:11, fontFamily:'"Fira Sans", sans-serif' }}>Recusar</button>
                     </div>
                   </div>
                 ))}
@@ -599,7 +600,7 @@ function App() {
                 const active = selFriend?.id === f.id && !showAiChat;
                 const statusColor = f.online ? C.online : C.offline;
                 return (
-                  <div key={f.id} className={`dm-item ${active ? 'active' : ''}`} onClick={() => selectFriend(f)} style={{ display:'flex', alignItems:'center', gap:10, padding:'8px 10px', cursor:'pointer', borderRadius:8, background: active ? 'rgba(255,255,255,0.08)' : 'transparent', marginBottom:2 }}>
+                  <div key={f.id} className={`dm-item ${active ? 'active' : ''}`} onClick={() => selectFriend(f)} style={{ display:'flex', alignItems:'center', gap:10, padding:'8px 10px', cursor:'pointer', borderRadius:8, background: active ? '#e8e8e8' : 'transparent', marginBottom:2 }}>
                     <Avatar name={f.username} online={f.online} size={38} statusColor={statusColor} />
                     <div style={{ flex:1, minWidth:0 }}>
                       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
@@ -623,7 +624,7 @@ function App() {
             </div>
 
             {/* User profile bar at bottom */}
-            <div style={{ padding:'8px 12px', borderTop:'1px solid rgba(0,0,0,0.08)', display:'flex', alignItems:'center', gap:10, flexShrink:0, background:'rgba(255,255,255,0.9)', backdropFilter:'blur(16px)', WebkitBackdropFilter:'blur(16px)', boxShadow:'0 -2px 12px rgba(0,0,0,0.04)' }}>
+            <div style={{ padding:'8px 12px', borderTop:'1px solid #e0e0e0', display:'flex', alignItems:'center', gap:10, flexShrink:0, background:'#ffffff' }}>
               <div style={{ position:'relative' }}>
                 <Avatar name={user?.username} online size={34} />
               </div>
@@ -631,12 +632,12 @@ function App() {
                 <div style={{ fontSize:13, fontWeight:600, color:C.text, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{user?.username}</div>
                 <div style={{ fontSize:11, color:C.green, fontWeight:500 }}>Online</div>
               </div>
-              <button onClick={() => setShowSearchModal(true)} style={{ width:30, height:30, borderRadius:8, background:'rgba(255,255,255,0.05)', border:'none', cursor:'pointer', color:C.green, display:'flex', alignItems:'center', justifyContent:'center', transition:'background 0.15s' }}
-                onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'} onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'} title="Novo amigo">
+              <button onClick={() => setShowSearchModal(true)} style={{ width:30, height:30, borderRadius:8, background:'#f0f0f0', border:'none', cursor:'pointer', color:C.green, display:'flex', alignItems:'center', justifyContent:'center', transition:'background 0.15s' }}
+                onMouseEnter={e => e.currentTarget.style.background = '#e0e0e0'} onMouseLeave={e => e.currentTarget.style.background = '#f0f0f0'} title="Novo amigo">
                 <I.UserPlus />
               </button>
-              <button onClick={doLogout} style={{ width:30, height:30, borderRadius:8, background:'rgba(255,255,255,0.05)', border:'none', cursor:'pointer', color:C.danger, display:'flex', alignItems:'center', justifyContent:'center', transition:'background 0.15s' }}
-                onMouseEnter={e => e.currentTarget.style.background = 'rgba(237,66,69,0.15)'} onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'} title="Terminar sessao">
+              <button onClick={doLogout} style={{ width:30, height:30, borderRadius:8, background:'#f0f0f0', border:'none', cursor:'pointer', color:C.danger, display:'flex', alignItems:'center', justifyContent:'center', transition:'background 0.15s' }}
+                onMouseEnter={e => e.currentTarget.style.background = '#e0e0e0'} onMouseLeave={e => e.currentTarget.style.background = '#f0f0f0'} title="Terminar sessao">
                 <I.Logout />
               </button>
             </div>
@@ -645,11 +646,11 @@ function App() {
 
         {/* Chat area */}
         {showChat && (
-          <div className="app-chat" style={{ flex:1, display:'flex', flexDirection:'column', background:'rgba(255,255,255,0.8)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)', borderLeft:'1px solid rgba(0,0,0,0.06)', minWidth:0 }}>
+          <div className="app-chat" style={{ flex:1, display:'flex', flexDirection:'column', background:'#f0f2f5', minWidth:0 }}>
             {(selFriend || showAiChat) ? (
               <>
                 {/* Chat header */}
-                <div style={{ height:48, padding:'0 16px', borderBottom:'1px solid rgba(0,0,0,0.08)', display:'flex', alignItems:'center', gap:12, background:'rgba(255,255,255,0.9)', backdropFilter:'blur(16px)', WebkitBackdropFilter:'blur(16px)', boxShadow:'0 2px 8px rgba(0,0,0,0.04)', flexShrink:0 }}>
+                <div style={{ height:48, padding:'0 16px', borderBottom:'1px solid #e0e0e0', display:'flex', alignItems:'center', gap:12, background:'#ffffff', flexShrink:0 }}>
                   {isMobile && <button onClick={() => setSidebarView('list')} style={{ background:'none', border:'none', padding:4, color:C.accent, display:'flex' }}><I.Back /></button>}
                   <Avatar name={showAiChat ? 'AI' : selFriend?.username} isAI={showAiChat} online={selFriend?.online} size={36} />
                   <div style={{ flex:1 }}>
@@ -663,16 +664,16 @@ function App() {
                       <button onClick={() => setActiveCall({ user: selFriend.username, userId: selFriend.id, type:'voice', caller:true })} style={{ width:32, height:32, borderRadius:'50%', background:'rgba(35,165,90,0.15)', border:'none', cursor:'pointer', color:C.green, display:'flex', alignItems:'center', justifyContent:'center', transition:'background 0.15s' }} title="Chamada de voz"><I.Phone /></button>
                       <button onClick={() => setActiveCall({ user: selFriend.username, userId: selFriend.id, type:'video', caller:true })} style={{ width:32, height:32, borderRadius:'50%', background:'rgba(88,101,242,0.15)', border:'none', cursor:'pointer', color:C.accent, display:'flex', alignItems:'center', justifyContent:'center', transition:'background 0.15s' }} title="Chamada de video"><I.Video /></button>
                       <div style={{ position:'relative', marginLeft:8 }}>
-                        <input type="text" placeholder="Buscar" style={{ width:140, padding:'6px 28px 6px 10px', background:'rgba(0,0,0,0.3)', border:'1px solid rgba(255,255,255,0.05)', borderRadius:6, fontSize:12, color:C.text, outline:'none', fontFamily:'"Fira Sans", sans-serif' }} />
+                        <input type="text" placeholder="Buscar" style={{ width:140, padding:'6px 28px 6px 10px', background:'#f5f5f5', border:'1px solid #e0e0e0', borderRadius:6, fontSize:12, color:C.text, outline:'none', fontFamily:'"Fira Sans", sans-serif' }} />
                         <span style={{ position:'absolute', right:8, top:'50%', transform:'translateY(-50%)', color:C.textMuted, display:'flex' }}><I.Search /></span>
                       </div>
-                      <button style={{ width:32, height:32, borderRadius:'50%', background:'rgba(255,255,255,0.08)', border:'none', cursor:'pointer', color:C.textSecondary, display:'flex', alignItems:'center', justifyContent:'center', transition:'background 0.15s' }}><I.More /></button>
+                      <button style={{ width:32, height:32, borderRadius:'50%', background:'transparent', border:'none', cursor:'pointer', color:C.textSecondary, display:'flex', alignItems:'center', justifyContent:'center', transition:'background 0.15s' }}><I.More /></button>
                     </div>
                   )}
                 </div>
 
                 {/* Messages */}
-                <div style={{ flex:1, overflowY:'auto', padding: isMobile ? '12px 16px' : '12px 24px', display:'flex', flexDirection:'column', gap:2, background:'rgba(245,247,250,0.6)', backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)' }}>
+                <div style={{ flex:1, overflowY:'auto', padding: isMobile ? '12px 16px' : '12px 24px', display:'flex', flexDirection:'column', gap:2, background:'#f0f2f5' }}>
                   <div style={{ textAlign:'center', padding:'16px 0' }}>
                     <div style={{ fontSize:11, color:C.textMuted }}>21 de Agosto de 2026</div>
                   </div>
@@ -703,7 +704,7 @@ function App() {
                           {isMedia ? (
                             <div style={{ marginTop:2 }}>{renderMedia(msg)}</div>
                           ) : (
-                            <div style={{ fontSize:14, lineHeight:1.5, color:'rgba(255,255,255,0.9)', wordBreak:'break-word', whiteSpace:'pre-wrap' }}>
+                            <div style={{ fontSize:14, lineHeight:1.5, color:'#1a1a1a', wordBreak:'break-word', whiteSpace:'pre-wrap' }}>
                               {showAiChat ? (msg.content || '') : (msg.conteudo || '')}
                             </div>
                           )}
@@ -747,7 +748,7 @@ function App() {
                 </div>
 
                 {/* Message Input */}
-                <div style={{ padding:'0 16px 8px', borderTop:'1px solid rgba(0,0,0,0.08)', background:'rgba(255,255,255,0.85)', backdropFilter:'blur(16px)', WebkitBackdropFilter:'blur(16px)', boxShadow:'0 -2px 12px rgba(0,0,0,0.04)', flexShrink:0 }}>
+                <div style={{ padding:'0 16px 8px', borderTop:'1px solid #e0e0e0', background:'#ffffff', flexShrink:0 }}>
                   {uploading && (
                     <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8, padding:'4px 0', fontSize:12, color:C.accent, fontWeight:500 }}>
                       <div style={{ width:16, height:16, borderRadius:'50%', border:`2px solid ${C.accent}`, borderTopColor:'transparent', animation:'spin 1s linear infinite' }} />
@@ -761,7 +762,7 @@ function App() {
                       <button onClick={stopRecording} style={{ padding:'3px 10px', background:C.danger, color:'#fff', border:'none', borderRadius:6, cursor:'pointer', fontSize:11, fontWeight:600, fontFamily:'"Fira Sans", sans-serif' }}>Parar</button>
                     </div>
                   )}
-                  <div style={{ display:'flex', alignItems:'center', gap:8, background:'rgba(0,0,0,0.04)', backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)', borderRadius:8, padding:'4px 12px', border:'1px solid rgba(0,0,0,0.08)', boxShadow:'inset 0 1px 3px rgba(0,0,0,0.05), 0 1px 4px rgba(0,0,0,0.03)' }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:8, background:'#f5f5f5', borderRadius:8, padding:'4px 12px', border:'1px solid #e0e0e0' }}>
                     <input type="file" id="fi" accept="image/*" style={{ display:'none' }} onChange={e => { handleFileUpload(e.target.files[0], 'IMAGEM'); e.target.value=''; }} />
                     <input type="file" id="fv" accept="video/*" style={{ display:'none' }} onChange={e => { handleFileUpload(e.target.files[0], 'VIDEO'); e.target.value=''; }} />
                     <input type="file" id="fa" accept="audio/*" style={{ display:'none' }} onChange={e => { handleFileUpload(e.target.files[0], 'AUDIO'); e.target.value=''; }} />
@@ -778,11 +779,11 @@ function App() {
                         placeholder={`Mensagem @${activeName}`}
                         style={{ width:'100%', border:'none', background:'transparent', fontSize:14, outline:'none', color:C.text, fontFamily:'"Fira Sans", sans-serif', padding:'8px 0' }} />
                       {attachOpen && !showAiChat && (
-                        <div style={{ position:'absolute', bottom:48, left:0, background:'rgba(255,255,255,0.95)', backdropFilter:'blur(20px)', borderRadius:12, boxShadow:'0 8px 32px rgba(0,0,0,0.12)', border:'1px solid rgba(0,0,0,0.08)', overflow:'hidden', zIndex:10, minWidth:180, animation:'fadeUp 0.15s ease' }}>
-                          <button onClick={() => document.getElementById('fi').click()} style={{ display:'flex', alignItems:'center', gap:10, width:'100%', padding:'10px 14px', background:'transparent', border:'none', color:C.text, cursor:'pointer', fontSize:13, fontFamily:'"Fira Sans", sans-serif', transition:'background 0.15s' }} onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}><I.Image /> Foto</button>
-                          <button onClick={() => document.getElementById('fv').click()} style={{ display:'flex', alignItems:'center', gap:10, width:'100%', padding:'10px 14px', background:'transparent', border:'none', color:C.text, cursor:'pointer', fontSize:13, fontFamily:'"Fira Sans", sans-serif', transition:'background 0.15s' }} onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}><I.Video /> Video</button>
-                          <button onClick={() => document.getElementById('fa').click()} style={{ display:'flex', alignItems:'center', gap:10, width:'100%', padding:'10px 14px', background:'transparent', border:'none', color:C.text, cursor:'pointer', fontSize:13, fontFamily:'"Fira Sans", sans-serif', transition:'background 0.15s' }} onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}><I.Mic /> Audio</button>
-                          <button onClick={() => { document.getElementById('fd').click(); setAttachOpen(false); }} style={{ display:'flex', alignItems:'center', gap:10, width:'100%', padding:'10px 14px', background:'transparent', border:'none', color:C.text, cursor:'pointer', fontSize:13, fontFamily:'"Fira Sans", sans-serif', borderTop:'1px solid rgba(255,255,255,0.05)', transition:'background 0.15s' }} onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}><I.File /> Documento</button>
+                        <div style={{ position:'absolute', bottom:48, left:0, background:'#ffffff', borderRadius:12, boxShadow:'0 4px 20px rgba(0,0,0,0.12)', border:'1px solid #e0e0e0', overflow:'hidden', zIndex:10, minWidth:180, animation:'fadeUp 0.15s ease' }}>
+                          <button onClick={() => document.getElementById('fi').click()} style={{ display:'flex', alignItems:'center', gap:10, width:'100%', padding:'10px 14px', background:'transparent', border:'none', color:C.text, cursor:'pointer', fontSize:13, fontFamily:'"Fira Sans", sans-serif', transition:'background 0.15s' }} onMouseEnter={e => e.currentTarget.style.background = '#f0f0f0'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}><I.Image /> Foto</button>
+                          <button onClick={() => document.getElementById('fv').click()} style={{ display:'flex', alignItems:'center', gap:10, width:'100%', padding:'10px 14px', background:'transparent', border:'none', color:C.text, cursor:'pointer', fontSize:13, fontFamily:'"Fira Sans", sans-serif', transition:'background 0.15s' }} onMouseEnter={e => e.currentTarget.style.background = '#f0f0f0'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}><I.Video /> Video</button>
+                          <button onClick={() => document.getElementById('fa').click()} style={{ display:'flex', alignItems:'center', gap:10, width:'100%', padding:'10px 14px', background:'transparent', border:'none', color:C.text, cursor:'pointer', fontSize:13, fontFamily:'"Fira Sans", sans-serif', transition:'background 0.15s' }} onMouseEnter={e => e.currentTarget.style.background = '#f0f0f0'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}><I.Mic /> Audio</button>
+                          <button onClick={() => { document.getElementById('fd').click(); setAttachOpen(false); }} style={{ display:'flex', alignItems:'center', gap:10, width:'100%', padding:'10px 14px', background:'transparent', border:'none', color:C.text, cursor:'pointer', fontSize:13, fontFamily:'"Fira Sans", sans-serif', borderTop:'1px solid #e0e0e0', transition:'background 0.15s' }} onMouseEnter={e => e.currentTarget.style.background = '#f0f0f0'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}><I.File /> Documento</button>
                         </div>
                       )}
                     </div>
@@ -796,7 +797,7 @@ function App() {
 
                     {showAiChat ? (
                       <button onClick={sendToAI} disabled={(!aiInput.trim()) || aiLoading}
-                        style={{ width:36, height:36, borderRadius:'50%', background: aiInput.trim() && !aiLoading ? C.accent : 'rgba(255,255,255,0.05)', border:'none', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', cursor: aiInput.trim() ? 'pointer' : 'default', flexShrink:0, transition:'background 0.2s' }}>
+                        style={{ width:36, height:36, borderRadius:'50%', background: aiInput.trim() && !aiLoading ? C.accent : '#e0e0e0', border:'none', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', cursor: aiInput.trim() ? 'pointer' : 'default', flexShrink:0, transition:'background 0.2s' }}>
                         {aiLoading ? <div style={{ width:18, height:18, borderRadius:'50%', border:'2px solid #fff', borderTopColor:'transparent', animation:'spin 1s linear infinite' }} /> : <I.Send />}
                       </button>
                     ) : newMsg.trim() ? (
@@ -824,9 +825,9 @@ function App() {
 
       {/* Search modal */}
       {showSearchModal && (
-        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.3)', backdropFilter:'blur(8px)', zIndex:100, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }} onClick={() => setShowSearchModal(false)}>
-          <div onClick={e => e.stopPropagation()} style={{ background:'rgba(255,255,255,0.95)', backdropFilter:'blur(24px)', width:'100%', maxWidth:400, borderRadius:16, padding:0, overflow:'hidden', animation:'fadeUp 0.2s ease', boxShadow:'0 20px 60px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.1)', border:'1px solid rgba(0,0,0,0.08)' }}>
-            <div style={{ padding:'16px 20px', borderBottom:'1px solid rgba(0,0,0,0.08)', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.3)', zIndex:100, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }} onClick={() => setShowSearchModal(false)}>
+          <div onClick={e => e.stopPropagation()} style={{ background:'#ffffff', width:'100%', maxWidth:400, borderRadius:16, padding:0, overflow:'hidden', animation:'fadeUp 0.2s ease', boxShadow:'0 10px 40px rgba(0,0,0,0.15)', border:'1px solid #e0e0e0' }}>
+            <div style={{ padding:'16px 20px', borderBottom:'1px solid #e0e0e0', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
               <h3 style={{ margin:0, fontSize:16, fontWeight:600, color:C.text, fontFamily:'"Fira Sans", sans-serif' }}>Novo contato</h3>
               <button onClick={() => setShowSearchModal(false)} style={{ background:'none', border:'none', cursor:'pointer', color:C.textMuted, padding:4 }}><I.X /></button>
             </div>
@@ -834,11 +835,11 @@ function App() {
               <div style={{ display:'flex', gap:8 }}>
                 <input type="tel" placeholder="Numero de telefone" value={searchPhone} onChange={e => setSearchPhone(e.target.value)}
                   onKeyDown={e => { if(e.key === 'Enter') doSearch(); }}
-                  style={{ flex:1, padding:'10px 14px', borderRadius:10, border:'1px solid rgba(0,0,0,0.1)', outline:'none', fontSize:14, color:C.text, background:'rgba(0,0,0,0.04)', minWidth:0, fontFamily:'"Fira Sans", sans-serif', boxShadow:'inset 0 1px 3px rgba(0,0,0,0.06)' }} />
-                <button onClick={doSearch} style={{ padding:'0 16px', background:C.accent, color:'#fff', border:'none', borderRadius:10, cursor:'pointer', fontWeight:600, fontSize:13, fontFamily:'"Fira Sans", sans-serif', boxShadow:'0 2px 8px rgba(88,101,242,0.3)' }}>Buscar</button>
+                  style={{ flex:1, padding:'10px 14px', borderRadius:10, border:'1px solid #e0e0e0', outline:'none', fontSize:14, color:C.text, background:'#f5f5f5', minWidth:0, fontFamily:'"Fira Sans", sans-serif' }} />
+                <button onClick={doSearch} style={{ padding:'0 16px', background:C.accent, color:'#fff', border:'none', borderRadius:10, cursor:'pointer', fontWeight:600, fontSize:13, fontFamily:'"Fira Sans", sans-serif' }}>Buscar</button>
               </div>
               {searchResult?.encontrado && (
-                <div style={{ marginTop:16, padding:16, borderRadius:12, background:'rgba(0,0,0,0.03)', animation:'fadeUp 0.2s ease', border:'1px solid rgba(0,0,0,0.06)', boxShadow:'0 2px 8px rgba(0,0,0,0.06)' }}>
+                <div style={{ marginTop:16, padding:16, borderRadius:12, background:'#f9f9f9', animation:'fadeUp 0.2s ease', border:'1px solid #e0e0e0' }}>
                   <div style={{ display:'flex', alignItems:'center', gap:12 }}>
                     <Avatar name={searchResult.usuario.username} size={42} />
                     <div style={{ flex:1 }}>
@@ -865,8 +866,8 @@ function App() {
 
       {/* Incoming call popup */}
       {incomingCall && (
-        <div style={{ position:'fixed', inset:0, zIndex:6000, background:'rgba(0,0,0,0.3)', backdropFilter:'blur(8px)', display:'flex', alignItems:'center', justifyContent:'center', animation:'fadeUp 0.2s ease' }}>
-          <div style={{ background:'rgba(255,255,255,0.95)', backdropFilter:'blur(24px)', borderRadius:20, padding:32, textAlign:'center', width:320, boxShadow:'0 20px 60px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.1)', border:'1px solid rgba(0,0,0,0.08)' }}>
+        <div style={{ position:'fixed', inset:0, zIndex:6000, background:'rgba(0,0,0,0.3)', display:'flex', alignItems:'center', justifyContent:'center', animation:'fadeUp 0.2s ease' }}>
+          <div style={{ background:'#ffffff', borderRadius:20, padding:32, textAlign:'center', width:320, boxShadow:'0 10px 40px rgba(0,0,0,0.15)', border:'1px solid #e0e0e0' }}>
             <div style={{ width:80, height:80, borderRadius:'50%', background: incomingCall.callType === 'video' ? 'linear-gradient(135deg, #5865F2, #23a55a)' : 'linear-gradient(135deg, #23a55a, #5865F2)', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 16px', boxShadow:'0 4px 20px rgba(88,101,242,0.3)' }}>
               {incomingCall.callType === 'video' ? <I.Video /> : <I.Phone />}
             </div>
@@ -886,7 +887,7 @@ function App() {
 
       {/* Toast */}
       {toast && (
-        <div onClick={() => { setToast(null); setShowRequests(true); }} style={{ position:'fixed', bottom:20, left:'50%', transform:'translateX(-50%)', zIndex:7000, background:'rgba(30,30,40,0.95)', backdropFilter:'blur(20px)', borderRadius:12, padding:'12px 20px', boxShadow:'0 8px 32px rgba(0,0,0,0.4)', border:'1px solid rgba(255,255,255,0.08)', display:'flex', alignItems:'center', gap:10, cursor:'pointer', animation:'fadeUp 0.3s ease', maxWidth:380 }}>
+        <div onClick={() => { setToast(null); setShowRequests(true); }} style={{ position:'fixed', bottom:20, left:'50%', transform:'translateX(-50%)', zIndex:7000, background:'#ffffff', borderRadius:12, padding:'12px 20px', boxShadow:'0 4px 20px rgba(0,0,0,0.15)', border:'1px solid #e0e0e0', display:'flex', alignItems:'center', gap:10, cursor:'pointer', animation:'fadeUp 0.3s ease', maxWidth:380 }}>
           <div style={{ width:32, height:32, borderRadius:10, background:C.green, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
           </div>
