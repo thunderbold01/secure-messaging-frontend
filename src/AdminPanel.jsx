@@ -149,7 +149,8 @@ function AdminPanel({ user, onLogout }) {
       // Try to fetch certs
       try {
         const token = localStorage.getItem('token');
-        const certRes = await fetch('http://127.0.0.1:8000/api/admin/certificados/', { 
+        const { API_BASE } = require('./config');
+        const certRes = await fetch(API_BASE + '/admin/certificados/', { 
           headers: { 'Authorization': `Token ${token}` } 
         });
         if (certRes.ok) { 

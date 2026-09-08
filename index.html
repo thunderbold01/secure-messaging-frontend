@@ -1,12 +1,45 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>vite-project</title>
-    <link rel="manifest" href="/manifest.json" />
-    <meta name="theme-color" content="#6366f1" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob: https:; media-src 'self' blob: data:; connect-src 'self' ws: wss: https:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests">
+    <title>CHATTING</title>
+    <script>
+      'use strict';
+      (function() {
+        try {
+          var token = localStorage.getItem('token');
+          if (!token || typeof token !== 'string' || token.length < 10) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.replace('/login.html');
+            return;
+          }
+          var userStr = localStorage.getItem('user');
+          if (!userStr) {
+            localStorage.removeItem('token');
+            window.location.replace('/login.html');
+            return;
+          }
+          var user = JSON.parse(userStr);
+          if (!user || !user.username) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.replace('/login.html');
+            return;
+          }
+        } catch(e) {
+          localStorage.clear();
+          window.location.replace('/login.html');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

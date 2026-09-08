@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHATTING - Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Inter',sans-serif; background:#f5f0e8; color:#2c1810; min-height:100vh; }
+        ::-webkit-scrollbar { width:6px; } ::-webkit-scrollbar-track { background:transparent; } ::-webkit-scrollbar-thumb { background:#d4c4a8; border-radius:3px; }
+
+        .login-overlay { position:fixed; inset:0; background:linear-gradient(135deg,#f5f0e8,#e8dcc8 50%,#d4a84e); display:flex; align-items:center; justify-content:center; z-index:1000; }
+        .login-box { background:#fff; padding:36px 32px; border-radius:16px; width:100%; max-width:380px; box-shadow:0 12px 48px rgba(139,115,85,0.15); border:1px solid #e8dcc8; }
+        .login-box h2 { font-size:20px; margin-bottom:4px; color:#2c1810; }
+        .login-box p { color:#b09a7a; font-size:13px; margin-bottom:20px; }
+        .login-box input { width:100%; padding:11px 14px; background:#f0e8d8; border:1px solid #e8dcc8; border-radius:8px; color:#2c1810; font-size:14px; outline:none; margin-bottom:10px; font-family:inherit; }
+        .login-box button { width:100%; padding:11px; background:#c8963e; color:#fff; border:none; border-radius:8px; font-size:15px; font-weight:600; cursor:pointer; font-family:inherit; box-shadow:0 2px 8px rgba(200,150,62,0.3); }
+        .login-box button:hover { background:#d4a84e; }
+
+        .header { background:#fff; border-bottom:1px solid #e8dcc8; padding:12px 24px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:10; box-shadow:0 1px 4px rgba(139,115,85,0.06); }
+        .header h1 { font-size:18px; font-weight:700; display:flex; align-items:center; gap:8px; color:#2c1810; }
+        .header h1 span { color:#c8963e; }
+        .header-right { display:flex; gap:8px; align-items:center; }
+        .header-right button { padding:7px 14px; border-radius:6px; border:1px solid #e8dcc8; background:#fff; color:#8b7355; cursor:pointer; font-size:12px; font-family:inherit; font-weight:500; transition:all 0.15s; }
+        .header-right button:hover { background:#c8963e; color:#fff; border-color:#c8963e; }
+        .header-right .logout { border-color:#d44; color:#d44; }
+        .header-right .logout:hover { background:#d44; color:#fff; }
+
+        .stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px,1fr)); gap:12px; padding:16px 24px; }
+        .stat-card { background:#fff; border-radius:10px; padding:16px; border:1px solid #e8dcc8; box-shadow:0 1px 4px rgba(139,115,85,0.06); }
+        .stat-card .label { font-size:11px; color:#b09a7a; text-transform:uppercase; letter-spacing:0.5px; font-weight:600; }
+        .stat-card .value { font-size:28px; font-weight:700; margin-top:4px; color:#2c1810; }
+        .stat-card .sub { font-size:11px; color:#b09a7a; margin-top:2px; }
+        .stat-card.green .value { color:#5cb85c; }
+        .stat-card.gold .value { color:#c8963e; }
+        .stat-card.red .value { color:#d44; }
+
+        .content { padding:0 24px 24px; }
+        .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px; }
+        .panel { background:#fff; border-radius:10px; border:1px solid #e8dcc8; overflow:hidden; box-shadow:0 1px 4px rgba(139,115,85,0.06); }
+        .panel-header { padding:14px 16px; border-bottom:1px solid #e8dcc8; display:flex; align-items:center; justify-content:space-between; }
+        .panel-header h3 { font-size:14px; font-weight:600; color:#2c1810; }
+        .panel-header .badge { background:#c8963e; color:#fff; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; }
+        .panel-body { max-height:500px; overflow-y:auto; }
+
+        table { width:100%; border-collapse:collapse; }
+        th { text-align:left; padding:10px 16px; font-size:11px; color:#b09a7a; text-transform:uppercase; letter-spacing:0.5px; font-weight:600; border-bottom:1px solid #e8dcc8; position:sticky; top:0; background:#fff; }
+        td { padding:10px 16px; font-size:13px; border-bottom:1px solid #f0e8d8; color:#2c1810; }
+        tr:hover td { background:#fdf8f0; }
+        .mono { font-family:'SF Mono',Consolas,monospace; font-size:11px; color:#b09a7a; word-break:break-all; max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .badge-sm { display:inline-block; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:600; }
+        .badge-encrypted { background:rgba(200,150,62,0.12); color:#a67c2e; }
+        .badge-type { background:rgba(200,150,62,0.08); color:#c8963e; }
+        .badge-online { background:rgba(92,184,92,0.12); color:#5cb85c; }
+        .badge-offline { background:rgba(176,154,122,0.12); color:#b09a7a; }
+        .no-access { color:#d44; font-weight:600; }
+
+        @media(max-width:900px) { .grid-2 { grid-template-columns:1fr; } }
+        @media(max-width:600px) { .stats { grid-template-columns:repeat(2,1fr); } .header { padding:10px 16px; } .content { padding:0 12px 12px; } }
+    </style>
+</head>
+<body>
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-box">
+            <div style="text-align:center;margin-bottom:20px">
+                <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#c8963e,#d4a84e);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;box-shadow:0 4px 16px rgba(200,150,62,0.3)">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+                </div>
+                <h2>Admin Panel</h2>
+                <p>Acesso restrito a administradores</p>
+            </div>
+            <input type="text" id="loginUser" placeholder="Username" value="admin">
+            <input type="password" id="loginPass" placeholder="Password" value="admin123">
+            <button onclick="doLogin()">Entrar</button>
+            <div id="loginErr" style="color:#d44;font-size:12px;margin-top:8px;display:none"></div>
+        </div>
+    </div>
+
+    <div class="header" id="header" style="display:none">
+        <h1><span>&#9670;</span> CHATTING Admin</h1>
+        <div class="header-right">
+            <button onclick="loadAll()">&#8635; Atualizar</button>
+            <button class="logout" onclick="doLogout()">Sair</button>
+        </div>
+    </div>
+
+    <div class="stats" id="statsArea" style="display:none">
+        <div class="stat-card green"><div class="label">Usuarios</div><div class="value" id="s-users">-</div><div class="sub" id="s-users-sub"></div></div>
+        <div class="stat-card gold"><div class="label">Mensagens</div><div class="value" id="s-msgs">-</div><div class="sub" id="s-msgs-sub"></div></div>
+        <div class="stat-card"><div class="label">Conversas</div><div class="value" id="s-convos">-</div><div class="sub">Ativas</div></div>
+        <div class="stat-card gold"><div class="label">Criptografia</div><div class="value" id="s-crypto">-</div><div class="sub">Chaves RSA-1024</div></div>
+        <div class="stat-card"><div class="label">Amizades</div><div class="value" id="s-amizades">-</div><div class="sub" id="s-amizades-sub"></div></div>
+        <div class="stat-card red"><div class="label">Logs</div><div class="value" id="s-logs">-</div><div class="sub">Operacoes cripto</div></div>
+    </div>
+
+    <div class="content" id="contentArea" style="display:none">
+        <div class="grid-2">
+            <div class="panel">
+                <div class="panel-header"><h3>Usuarios</h3><span class="badge" id="users-count">0</span></div>
+                <div class="panel-body"><table><thead><tr><th>ID</th><th>Username</th><th>Telefone</th><th>Online</th><th>Chaves</th></tr></thead><tbody id="users-tbody"></tbody></table></div>
+            </div>
+            <div class="panel">
+                <div class="panel-header"><h3>Mensagens Criptografadas</h3><span class="badge" id="msgs-count">0</span></div>
+                <div class="panel-body"><table><thead><tr><th>De</th><th>Para</th><th>Tipo</th><th>Algoritmo</th><th>Hash</th><th>Data</th></tr></thead><tbody id="msgs-tbody"></tbody></table></div>
+            </div>
+        </div>
+        <div class="grid-2">
+            <div class="panel">
+                <div class="panel-header"><h3>Amizades</h3><span class="badge" id="amizades-count">0</span></div>
+                <div class="panel-body"><table><thead><tr><th>De</th><th>Para</th><th>Status</th><th>Canal Seguro</th><th>DH</th></tr></thead><tbody id="amizades-tbody"></tbody></table></div>
+            </div>
+            <div class="panel">
+                <div class="panel-header"><h3>Chaves Criptograficas</h3><span class="badge" id="chaves-count">0</span></div>
+                <div class="panel-body"><table><thead><tr><th>Usuario</th><th>Algoritmo</th><th>Tipo</th><th>Fingerprint</th></tr></thead><tbody id="chaves-tbody"></tbody></table></div>
+            </div>
+        </div>
+        <div class="panel" style="margin-top:16px">
+            <div class="panel-header"><h3>Logs de Criptografia</h3><span class="badge" id="logs-count">0</span></div>
+            <div class="panel-body"><table><thead><tr><th>Usuario</th><th>Operacao</th><th>Algoritmo</th><th>Parametros</th><th>Data</th></tr></thead><tbody id="logs-tbody"></tbody></table></div>
+        </div>
+    </div>
+
+    <script>
+        const API = `http://${window.location.hostname}:8000/api`;
+        let token = localStorage.getItem('admin_token');
+
+        async function doLogin() {
+            const u = document.getElementById('loginUser').value;
+            const p = document.getElementById('loginPass').value;
+            try {
+                const r = await fetch(API+'/login/', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({username:u, password:p}) });
+                const d = await r.json();
+                if(!r.ok) throw new Error(d.erro || 'Credenciais invalidas');
+                if(d.usuario.username !== 'admin') throw new Error('Apenas admin pode aceder');
+                token = d.token;
+                localStorage.setItem('admin_token', token);
+                document.getElementById('loginOverlay').style.display='none';
+                showUI(); loadAll();
+            } catch(e) { const el = document.getElementById('loginErr'); el.textContent = e.message; el.style.display = 'block'; }
+        }
+
+        function doLogout() {
+            localStorage.removeItem('admin_token'); token = null;
+            document.getElementById('loginOverlay').style.display='flex';
+            document.getElementById('header').style.display='none';
+            document.getElementById('statsArea').style.display='none';
+            document.getElementById('contentArea').style.display='none';
+        }
+
+        function showUI() {
+            document.getElementById('header').style.display='flex';
+            document.getElementById('statsArea').style.display='grid';
+            document.getElementById('contentArea').style.display='block';
+        }
+
+        async function api(path, method='GET') {
+            const r = await fetch(API+path, { method, headers:{ 'Authorization':'Token '+token } });
+            if(r.status === 401) { doLogout(); return null; }
+            return r.json();
+        }
+
+        async function loadAll() { await Promise.all([loadStats(), loadUsers(), loadMessages(), loadAmizades(), loadChaves(), loadLogs()]); }
+
+        async function loadStats() {
+            const d = await api('/admin/stats/'); if(!d) return;
+            document.getElementById('s-users').textContent = d.total_usuarios || 0;
+            document.getElementById('s-users-sub').textContent = (d.usuarios_online || 0) + ' online';
+            document.getElementById('s-msgs').textContent = d.total_mensagens || 0;
+            document.getElementById('s-msgs-sub').textContent = (d.mensagens_hoje || 0) + ' hoje';
+            document.getElementById('s-convos').textContent = d.total_conversas || 0;
+            document.getElementById('s-crypto').textContent = d.total_chaves || 0;
+            document.getElementById('s-amizades').textContent = d.total_amizades || 0;
+            document.getElementById('s-amizades-sub').textContent = (d.amizades_ativas || 0) + ' ativas';
+            document.getElementById('s-logs').textContent = d.total_logs || 0;
+        }
+
+        async function loadUsers() {
+            const d = await api('/admin/usuarios/'); if(!d) return;
+            const users = d.usuarios || [];
+            document.getElementById('users-count').textContent = users.length;
+            document.getElementById('users-tbody').innerHTML = users.map(u => `<tr><td>${u.id}</td><td>${u.username}</td><td>${u.telefone||'-'}</td><td><span class="badge-sm ${u.online?'badge-online':'badge-offline'}">${u.online?'Online':'Offline'}</span></td><td><span class="badge-sm badge-encrypted">${u.tem_chaves?'RSA-1024':'Sem chaves'}</span></td></tr>`).join('');
+        }
+
+        async function loadMessages() {
+            const d = await api('/admin/mensagens/'); if(!d) return;
+            const msgs = d.mensagens || [];
+            document.getElementById('msgs-count').textContent = msgs.length;
+            document.getElementById('msgs-tbody').innerHTML = msgs.map(m => `<tr><td>${m.remetente||'-'}</td><td>${m.destinatario||'-'}</td><td><span class="badge-sm badge-type">${m.tipo||'TEXTO'}</span></td><td><span class="badge-sm badge-encrypted">${m.algoritmo||'-'}</span></td><td class="mono"><span class="no-access">Encriptado</span></td><td style="font-size:11px;color:#b09a7a">${m.enviada_em?new Date(m.enviada_em).toLocaleString('pt-BR'):'-'}</td></tr>`).join('');
+        }
+
+        async function loadAmizades() {
+            const d = await api('/admin/estatisticas/'); if(!d) return;
+            const a = d.amizades || [];
+            document.getElementById('amizades-count').textContent = a.length;
+            document.getElementById('amizades-tbody').innerHTML = a.map(am => `<tr><td>${am.remetente||'-'}</td><td>${am.destinatario||'-'}</td><td><span class="badge-sm badge-encrypted">${am.status||'-'}</span></td><td>${am.canal_seguro?'<span class="badge-sm badge-encrypted">Sim</span>':'<span class="badge-sm badge-offline">Nao</span>'}</td><td>${am.dh_completo?'<span class="badge-sm badge-encrypted">Completo</span>':'<span class="badge-sm badge-offline">Pendente</span>'}</td></tr>`).join('');
+        }
+
+        async function loadChaves() {
+            const d = await api('/admin/chaves/'); if(!d) return;
+            const chaves = d.chaves || [];
+            document.getElementById('chaves-count').textContent = chaves.length;
+            document.getElementById('chaves-tbody').innerHTML = chaves.map(c => `<tr><td>${c.usuario||'-'}</td><td><span class="badge-sm badge-encrypted">${c.algoritmo||'-'}</span></td><td><span class="badge-sm badge-type">${c.tipo||'-'}</span></td><td class="mono">${c.fingerprint||'-'}</td></tr>`).join('');
+        }
+
+        async function loadLogs() {
+            const d = await api('/admin/logs/'); if(!d) return;
+            const logs = d.logs || [];
+            document.getElementById('logs-count').textContent = logs.length;
+            document.getElementById('logs-tbody').innerHTML = logs.map(l => `<tr><td>${l.usuario||'-'}</td><td><span class="badge-sm badge-type">${l.operacao||'-'}</span></td><td><span class="badge-sm badge-encrypted">${l.algoritmo||'-'}</span></td><td class="mono" title='${JSON.stringify(l.parametros||{})}'>${JSON.stringify(l.parametros||{}).substring(0,60)}...</td><td style="font-size:11px;color:#b09a7a">${l.criado_em?new Date(l.criado_em).toLocaleString('pt-BR'):'-'}</td></tr>`).join('');
+        }
+
+        if(token) { document.getElementById('loginOverlay').style.display='none'; showUI(); loadAll(); }
+        document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+        document.getElementById('loginUser').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+        setInterval(() => { if(token) loadAll(); }, 10000);
+    </script>
+</body>
+</html>

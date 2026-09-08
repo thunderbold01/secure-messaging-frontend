@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
-import VoiceRecorder from './VoiceRecorder';
 
 function FileUpload({ conversaId, onFileSent }) {
   const [uploading, setUploading] = useState(false);
+  const [uploadMsg, setUploadMsg] = useState('');
   const fileInputRef = useRef(null);
 
   const fileToBase64 = (file) => new Promise((resolve, reject) => {
@@ -15,9 +15,10 @@ function FileUpload({ conversaId, onFileSent }) {
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    if (file.size > 10 * 1024 * 1024) { alert('Arquivo muito grande! Máximo 10MB'); return; }
+    if (file.size > 10 * 1024 * 1024) { alert('Arquivo muito grande! Maximo 10MB'); return; }
 
     setUploading(true);
+    setUploadMsg('Criptografando...');
     try {
       const base64 = await fileToBase64(file);
       let tipo = 'ARQUIVO';
@@ -26,30 +27,29 @@ function FileUpload({ conversaId, onFileSent }) {
       else if (file.type.startsWith('video/')) tipo = 'VIDEO';
 
       const token = localStorage.getItem('token');
-      const apiUrl = window.location.hostname === 'localhost' ? 'http://127.0.0.1:8000/api' : 'https://secure-messaging-api.onrender.com/api';
-      const response = await fetch(`${apiUrl}/conversas/${conversaId}/enviar-arquivo/`, {
+      const { API_BASE } = require('./config');
+      const response = await fetch(`${API_BASE}/conversas/${conversaId}/enviar-arquivo/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Token ${token}` },
         body: JSON.stringify({ arquivo_base64: base64, tipo, nome_arquivo: file.name, mime_type: file.type })
       });
       const data = await response.json();
-      if (response.ok) { alert(`✅ ${tipo} enviado com segurança!`); onFileSent?.(); fileInputRef.current.value = ''; }
-      else alert(`❌ Erro: ${data.erro || 'Falha ao enviar'}`);
-    } catch (err) { alert('❌ Erro ao enviar arquivo'); }
-    finally { setUploading(false); }
+      if (response.ok) { onFileSent?.(); fileInputRef.current.value = ''; }
+      else { alert(`Erro: ${data.erro || 'Falha ao enviar'}`); }
+    } catch (err) { alert('Erro ao enviar arquivo'); }
+    finally { setUploading(false); setUploadMsg(''); }
   };
 
-  const handleVoiceSent = () => onFileSent?.();
-
   return (
-    <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-      <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept="image/*,audio/*,video/*" style={{ display: 'none' }} />
-      <button onClick={() => fileInputRef.current?.click()} disabled={uploading} style={{
-        width: 36, height: 36, borderRadius: '50%', border: 'none', background: '#10b98120', color: '#10b981',
-        cursor: uploading ? 'not-allowed' : 'pointer', fontSize: 18, opacity: uploading ? 0.5 : 1
-      }} title="Enviar arquivo">📎</button>
-      <VoiceRecorder conversaId={conversaId} onVoiceSent={handleVoiceSent} />
-      {uploading && <span style={{ fontSize: 12, color: '#06b6d4', marginLeft: 8 }}>⏳ Criptografando...</span>}
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept="image/*,audio/*,video/*,.pdf,.doc,.docx,.txt" style={{ display: 'none' }} />
+      {uploading ? (
+        <span style={{ fontSize: 12, color: '#0084ff', fontWeight: 500 }}>{uploadMsg}</span>
+      ) : (
+        <button onClick={() => fileInputRef.current?.click()} title="Enviar arquivo" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#8a8d91', padding: 4, display: 'flex', alignItems: 'center' }}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+        </button>
+      )}
     </div>
   );
 }

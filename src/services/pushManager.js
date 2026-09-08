@@ -75,11 +75,8 @@ class PushNotificationManager {
         if (!token) return;
         
         try {
-            const apiUrl = window.location.hostname === 'localhost'
-                ? 'http://127.0.0.1:8000/api'
-                : 'https://secure-messaging-api.onrender.com/api';
-            
-            await fetch(`${apiUrl}/push/save-subscription/`, {
+            const { API_BASE } = await import('../config');
+            await fetch(`${API_BASE}/push/save-subscription/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -104,11 +101,8 @@ class PushNotificationManager {
                 
                 const token = localStorage.getItem('token');
                 if (token) {
-                    const apiUrl = window.location.hostname === 'localhost'
-                        ? 'http://127.0.0.1:8000/api'
-                        : 'https://secure-messaging-api.onrender.com/api';
-                    
-                    await fetch(`${apiUrl}/push/remove-subscription/`, {
+                    const { API_BASE } = await import('../config');
+                    await fetch(`${API_BASE}/push/remove-subscription/`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

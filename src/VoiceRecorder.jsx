@@ -61,8 +61,8 @@ function VoiceRecorder({ conversaId, onVoiceSent }) {
       reader.onloadend = async () => {
         const base64Audio = reader.result;
         const token = localStorage.getItem('token');
-        const apiUrl = window.location.hostname === 'localhost' ? 'http://127.0.0.1:8000/api' : 'https://secure-messaging-api.onrender.com/api';
-        const response = await fetch(`${apiUrl}/conversas/${conversaId}/enviar-arquivo/`, {
+        const { API_BASE } = require('./config');
+        const response = await fetch(`${API_BASE}/conversas/${conversaId}/enviar-arquivo/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Token ${token}` },
           body: JSON.stringify({ arquivo_base64: base64Audio, tipo: 'AUDIO', nome_arquivo: `voz_${Date.now()}.webm`, mime_type: 'audio/webm' })
