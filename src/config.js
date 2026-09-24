@@ -1,9 +1,9 @@
 const host = window.location.hostname;
 const port = window.location.port;
-const protocol = window.location.protocol === 'https:' ? 'https' : 'http';
-const wsProtocol = protocol === 'https' ? 'wss' : 'ws';
+const protocol = 'http';
+const wsProtocol = 'ws';
 
-const isSecure = protocol === 'https';
+const isSecure = false;
 
 export const API_BASE = isSecure
   ? (port === '443' || !port ? '/api' : `${protocol}://${host}:${port}/api`)

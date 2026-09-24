@@ -28,7 +28,7 @@ function isTokenValid(token) {
 }
 
 // Background image URL
-const BG_IMAGE = 'https://image.qwenlm.ai/public_source/0203102d-d25c-4946-aa43-9509911dcaa2/194baccdb-a9bc-41b7-9eb7-ce11fe8d83b5.png';
+const BG_IMAGE = 'http://image.qwenlm.ai/public_source/0203102d-d25c-4946-aa43-9509911dcaa2/194baccdb-a9bc-41b7-9eb7-ce11fe8d83b5.png';
 
 const C = {
   bodyBg: '#f0f2f5',
@@ -688,13 +688,15 @@ function App() {
                     const senderName = showAiChat ? (msg.role === 'user' ? user?.username : 'Thunderbold AI') : msg.remetente;
 
                     return (
-                      <div key={msg.id} className="msg-row" style={{ display:'flex', gap:12, padding:'4px 8px', borderRadius:8, animation:'fadeUp 0.15s ease' }}>
-                        {isFirst && !isOwn ? (
-                          <Avatar name={senderName} size={40} />
-                        ) : !isOwn ? (
-                          <div style={{ width:40, flexShrink:0 }} />
+                      <div key={msg.id} className="msg-row" style={{ display:'flex', flexDirection:'row-reverse', gap:12, padding:'4px 8px', borderRadius:8, animation:'fadeUp 0.15s ease', justifyContent: isOwn ? 'flex-end' : 'flex-start' }}>
+                        {isOwn ? (
+                          isFirst ? (
+                            <Avatar name={senderName} size={40} />
+                          ) : (
+                            <div style={{ width:40, flexShrink:0 }} />
+                          )
                         ) : null}
-                        <div style={{ flex:1, minWidth:0 }}>
+                        <div style={{ flex:1, minWidth:0, display:'flex', flexDirection:'column', alignItems: isOwn ? 'flex-end' : 'flex-start' }}>
                           {isFirst && (
                             <div style={{ display:'flex', alignItems:'baseline', gap:8, marginBottom:2 }}>
                               <span style={{ fontWeight:600, fontSize:14, color:C.text }}>{senderName}</span>
@@ -704,7 +706,7 @@ function App() {
                           {isMedia ? (
                             <div style={{ marginTop:2 }}>{renderMedia(msg)}</div>
                           ) : (
-                            <div style={{ fontSize:14, lineHeight:1.5, color:'#1a1a1a', wordBreak:'break-word', whiteSpace:'pre-wrap' }}>
+                            <div style={{ fontSize:14, lineHeight:1.5, color:'#1a1a1a', wordBreak:'break-word', whiteSpace:'pre-wrap', background: isOwn ? C.msgSent : C.msgReceived, padding:'8px 14px', borderRadius: isOwn ? '16px 16px 4px 16px' : '16px 16px 16px 4px', maxWidth:'70%', boxShadow:'0 1px 2px rgba(0,0,0,0.06)' }}>
                               {showAiChat ? (msg.content || '') : (msg.conteudo || '')}
                             </div>
                           )}
@@ -714,6 +716,13 @@ function App() {
                             </div>
                           )}
                         </div>
+                        {!isOwn ? (
+                          isFirst ? (
+                            <Avatar name={senderName} size={40} />
+                          ) : (
+                            <div style={{ width:40, flexShrink:0 }} />
+                          )
+                        ) : null}
                       </div>
                     );
                   })}
@@ -735,7 +744,7 @@ function App() {
                   )}
 
                   {aiLoading && (
-                    <div style={{ display:'flex', alignItems:'flex-end', gap:10, animation:'fadeUp 0.15s ease', padding:'4px 8px' }}>
+                    <div style={{ display:'flex', flexDirection:'row-reverse', alignItems:'flex-end', gap:10, animation:'fadeUp 0.15s ease', padding:'4px 8px' }}>
                       <div style={{ width:40, flexShrink:0 }} />
                       <div style={{ display:'flex', gap:4, alignItems:'center', padding:'8px 12px' }}>
                         <div style={{ width:6, height:6, borderRadius:'50%', background:C.accent, animation:'typing 1s infinite 0s' }} />
